@@ -2,8 +2,6 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-
-  <!-- Viewport & PWA -->
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#0b1220">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -13,7 +11,6 @@
 
   <title>HydroCamel</title>
 
-  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;600&display=swap" rel="stylesheet">
 
   <style>
@@ -25,9 +22,7 @@
       --muted: #94a3b8;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html {
       height: 100%;
@@ -41,11 +36,8 @@
       font-family: "DM Sans", system-ui, sans-serif;
       background: linear-gradient(180deg, #0b1220, #020617);
       color: var(--text);
-
-      padding-top: env(safe-area-inset-top);
-      padding-bottom: env(safe-area-inset-bottom);
-      padding-left: env(safe-area-inset-left);
-      padding-right: env(safe-area-inset-right);
+      padding: env(safe-area-inset-top) env(safe-area-inset-right)
+               env(safe-area-inset-bottom) env(safe-area-inset-left);
     }
 
     header {
@@ -57,7 +49,6 @@
       font-family: "Syne", sans-serif;
       font-size: 2.2rem;
       margin: 0;
-      letter-spacing: 0.5px;
     }
 
     header p {
@@ -85,7 +76,7 @@
     .card h2 {
       font-family: "Syne", sans-serif;
       font-size: 1.2rem;
-      margin: 0 0 10px 0;
+      margin: 0 0 12px;
     }
 
     .progress {
@@ -125,8 +116,21 @@
       margin-top: 10px;
     }
 
-    button:active {
-      transform: scale(0.98);
+    .goal-buttons button {
+      margin-top: 8px;
+      background: #020617;
+      color: var(--text);
+      border: 1px solid #1e293b;
+    }
+
+    .goal-buttons button.active {
+      background: linear-gradient(135deg, #38bdf8, #22d3ee);
+      color: #020617;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      margin-top: 10px;
     }
 
     .ai {
@@ -146,102 +150,142 @@
 
 <body>
 
-  <header>
-    <h1>HydroCamel</h1>
-    <p>Smart hydration intelligence</p>
-  </header>
+<header>
+  <h1>HydroCamel</h1>
+  <p>Smart hydration intelligence</p>
+</header>
 
-  <main>
-    <div class="card">
-      <h2>Today’s Hydration</h2>
+<main>
 
-      <div class="progress">
-        <span id="progressBar"></span>
-      </div>
+  <div class="card">
+    <h2>Daily Goal</h2>
 
-      <div class="stat">
-        <span id="amountText">0 ml</span>
-        <span>Goal: 2500 ml</span>
-      </div>
-
-      <button id="drinkBtn">+ Drink 250 ml</button>
+    <div class="goal-buttons">
+      <button data-goal="2000">2000 ml · Light</button>
+      <button data-goal="2500">2500 ml · Normal</button>
+      <button data-goal="3000">3000 ml · Active</button>
     </div>
 
-    <div class="card">
-      <h2>AI Hydration Insight</h2>
-      <div class="ai" id="aiText">Loading hydration intelligence…</div>
+    <input type="range" min="1500" max="4000" step="250" id="customGoal">
+    <div class="stat">
+      <span>Custom goal</span>
+      <span id="goalValue">2500 ml</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Today’s Hydration</h2>
+
+    <div class="progress">
+      <span id="progressBar"></span>
     </div>
 
-    <div class="card">
-      <h2>Weekly Intelligence Report</h2>
-      <div class="ai" id="weeklyText">Start logging to unlock insights.</div>
+    <div class="stat">
+      <span id="amountText">0 ml</span>
+      <span id="goalText">Goal: 2500 ml</span>
     </div>
-  </main>
 
-  <footer>
-    Built with 💧 discipline · Works offline
-  </footer>
+    <button id="drinkBtn">+ Drink 250 ml</button>
+  </div>
 
-  <script>
-    const GOAL = 2500;
-    const STEP = 250;
+  <div class="card">
+    <h2>AI Hydration Insight</h2>
+    <div class="ai" id="aiText"></div>
+  </div>
 
-    const progressBar = document.getElementById("progressBar");
-    const amountText = document.getElementById("amountText");
-    const aiText = document.getElementById("aiText");
-    const weeklyText = document.getElementById("weeklyText");
-    const drinkBtn = document.getElementById("drinkBtn");
+  <div class="card">
+    <h2>Weekly Intelligence Report</h2>
+    <div class="ai" id="weeklyText"></div>
+  </div>
 
-    const todayKey = new Date().toISOString().slice(0, 10);
+</main>
 
-    const data = JSON.parse(localStorage.getItem("hydration") || "{}");
-    data[todayKey] = data[todayKey] || 0;
+<footer>
+  Built with 💧 discipline · Works offline
+</footer>
 
-    function updateUI(amount) {
-      const percent = Math.min((amount / GOAL) * 100, 100);
-      progressBar.style.width = percent + "%";
-      amountText.textContent = amount + " ml";
+<script>
+  const STEP = 250;
+  const todayKey = new Date().toISOString().slice(0, 10);
 
-      if (amount < 1000) {
-        aiText.textContent = "You’re under-hydrated. Start sipping regularly.";
-      } else if (amount < 2000) {
-        aiText.textContent = "Good progress. Keep steady intake through the day.";
-      } else if (amount < GOAL) {
-        aiText.textContent = "Almost there. One or two more glasses will do it.";
-      } else {
-        aiText.textContent = "Excellent. You’ve reached optimal hydration today.";
-      }
-    }
+  const data = JSON.parse(localStorage.getItem("hydration") || "{}");
+  data[todayKey] = data[todayKey] || 0;
 
-    function updateWeekly() {
-      const days = Object.values(data);
-      if (days.length < 3) {
-        weeklyText.textContent = "Not enough data yet. Keep logging daily.";
-        return;
-      }
+  let GOAL = Number(localStorage.getItem("goal")) || 2500;
 
-      const avg = Math.round(days.reduce((a, b) => a + b, 0) / days.length);
-      weeklyText.textContent =
-        "Your average intake is " + avg + " ml/day. " +
-        (avg >= GOAL
-          ? "Consistency is strong. Maintain this habit."
-          : "Try increasing intake gradually for better balance.");
-    }
+  const progressBar = document.getElementById("progressBar");
+  const amountText = document.getElementById("amountText");
+  const goalText = document.getElementById("goalText");
+  const aiText = document.getElementById("aiText");
+  const weeklyText = document.getElementById("weeklyText");
+  const drinkBtn = document.getElementById("drinkBtn");
+  const goalButtons = document.querySelectorAll(".goal-buttons button");
+  const customGoal = document.getElementById("customGoal");
+  const goalValue = document.getElementById("goalValue");
+
+  function setGoal(value) {
+    GOAL = value;
+    localStorage.setItem("goal", value);
+    goalText.textContent = "Goal: " + value + " ml";
+    goalValue.textContent = value + " ml";
+    customGoal.value = value;
+
+    goalButtons.forEach(btn =>
+      btn.classList.toggle("active", Number(btn.dataset.goal) === value)
+    );
 
     updateUI(data[todayKey]);
-    updateWeekly();
+  }
 
-    drinkBtn.onclick = () => {
-      data[todayKey] += STEP;
-      localStorage.setItem("hydration", JSON.stringify(data));
-      updateUI(data[todayKey]);
-      updateWeekly();
-    };
+  function updateUI(amount) {
+    const percent = Math.min((amount / GOAL) * 100, 100);
+    progressBar.style.width = percent + "%";
+    amountText.textContent = amount + " ml";
 
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("/hydrocamel/sw.js");
+    if (amount < GOAL * 0.4) {
+      aiText.textContent = "You’re under your hydration curve. Sip steadily.";
+    } else if (amount < GOAL * 0.8) {
+      aiText.textContent = "Good pace. Keep spreading intake across the day.";
+    } else if (amount < GOAL) {
+      aiText.textContent = "Almost there. One or two more glasses.";
+    } else {
+      aiText.textContent = "Goal achieved. Excellent hydration discipline.";
     }
-  </script>
+  }
+
+  function updateWeekly() {
+    const days = Object.values(data);
+    if (days.length < 3) {
+      weeklyText.textContent = "Log a few more days to unlock insights.";
+      return;
+    }
+
+    const avg = Math.round(days.reduce((a,b)=>a+b,0)/days.length);
+    weeklyText.textContent =
+      `Average intake: ${avg} ml/day. ` +
+      (avg >= GOAL ? "Strong consistency." : "Try nudging intake higher.");
+  }
+
+  drinkBtn.onclick = () => {
+    data[todayKey] += STEP;
+    localStorage.setItem("hydration", JSON.stringify(data));
+    updateUI(data[todayKey]);
+    updateWeekly();
+  };
+
+  goalButtons.forEach(btn =>
+    btn.onclick = () => setGoal(Number(btn.dataset.goal))
+  );
+
+  customGoal.oninput = e => setGoal(Number(e.target.value));
+
+  setGoal(GOAL);
+  updateWeekly();
+
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("/hydrocamel/sw.js");
+  }
+</script>
 
 </body>
 </html>
