@@ -1,253 +1,249 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
-<title>HydroCamel</title>
-<meta name="theme-color" content="#020c1b">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HydroCamel</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@800&family=DM+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;600&display=swap" rel="stylesheet">
 
-<style>
-/* ================= CORE THEME ================= */
-:root {
-  --bg: #020c1b;
-  --bg-grad: linear-gradient(180deg,#020c1b,#081a33);
-  --glass: rgba(255,255,255,.06);
-  --glass-border: rgba(255,255,255,.18);
-  --accent: #32c8ff;
-  --text: #e0f4ff;
-  --slider-track: rgba(255,255,255,.15);
-}
+  <!-- PWA -->
+  <meta name="theme-color" content="#0f172a" />
 
-[data-theme="light"] {
-  --bg: #f4f8fb;
-  --bg-grad: linear-gradient(180deg,#f4f8fb,#dbe9f4);
-  --glass: rgba(255,255,255,.9);
-  --glass-border: rgba(0,122,255,.2);
-  --accent: #007aff;
-  --text: #0a1a2f;
-  --slider-track: rgba(0,0,0,.2);
-}
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #020617;
+      --accent: #38bdf8;
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+    }
 
-html,body {
-  margin:0;height:100%;background:var(--bg);overflow:hidden;
-  font-family:'DM Sans',system-ui;color:var(--text);
-}
+    * {
+      box-sizing: border-box;
+    }
 
-#app {
-  max-width:430px;margin:0 auto;height:100%;
-  padding:env(safe-area-inset-top) 20px env(safe-area-inset-bottom);
-  display:flex;flex-direction:column;gap:14px;
-}
+    body {
+      margin: 0;
+      font-family: "DM Sans", system-ui, sans-serif;
+      background: radial-gradient(1200px 600px at top, #0b1225, var(--bg));
+      color: var(--text);
+      min-height: 100vh;
+    }
 
-.syne { font-family:'Syne',sans-serif;font-weight:800;letter-spacing:-.5px }
+    header {
+      padding: 24px 20px;
+      text-align: center;
+    }
 
-/* ================= GLASS ================= */
-.glass-card {
-  background:linear-gradient(180deg,rgba(255,255,255,.1),rgba(255,255,255,.03));
-  backdrop-filter:blur(20px);
-  border:1px solid var(--glass-border);
-  border-radius:20px;
-  box-shadow:0 10px 30px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.15);
-}
+    header h1 {
+      font-family: "Syne", sans-serif;
+      font-size: 2.2rem;
+      margin: 0;
+      letter-spacing: 0.5px;
+    }
 
-/* ================= HEADER ================= */
-.header { display:flex;justify-content:space-between;align-items:center }
+    header p {
+      color: var(--muted);
+      margin-top: 6px;
+      font-size: 0.95rem;
+    }
 
-/* ================= ORB ================= */
-.orb-box { flex:2.5;display:flex;justify-content:center;align-items:center }
-.orb {
-  width:160px;height:160px;border-radius:50%;
-  border:3px solid var(--glass-border);
-  position:relative;overflow:hidden;
-  animation:breathe 6s ease-in-out infinite;
-}
-@keyframes breathe { 50%{transform:scale(1.02)} }
+    main {
+      max-width: 460px;
+      margin: 0 auto;
+      padding: 12px;
+      display: grid;
+      gap: 16px;
+    }
 
-.orb-fill {
-  position:absolute;bottom:0;width:100%;
-  background:linear-gradient(180deg,#32c8ff,#005bd1);
-  transition:height 1s cubic-bezier(.2,.8,.2,1);
-  box-shadow:0 0 30px rgba(50,200,255,.6);
-}
-.orb-fill::after {
-  content:"";position:absolute;top:-10px;left:-10%;
-  width:120%;height:20px;background:rgba(255,255,255,.35);
-  border-radius:50%;
-}
+    .card {
+      background: linear-gradient(180deg, #020617, #020617cc);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+      border: 1px solid #020617;
+    }
 
-.streak-ring {
-  position:absolute;inset:-10px;border-radius:50%;
-  border:4px solid transparent;border-top-color:var(--accent);
-  transform:rotate(-90deg);opacity:0;
-}
+    .card h2 {
+      font-family: "Syne", sans-serif;
+      font-size: 1.2rem;
+      margin: 0 0 10px 0;
+    }
 
-.streak-badge { font-size:10px;font-weight:800;letter-spacing:1px;opacity:.7 }
+    .progress-wrap {
+      margin-top: 10px;
+    }
 
-/* ================= STATS ================= */
-.stats-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:10px }
-.stat-pill { text-align:center;padding:10px }
-.stat-pill div:first-child { font-weight:800;font-size:16px }
-.stat-pill div:last-child { font-size:9px;opacity:.6;letter-spacing:1px }
+    .progress {
+      width: 100%;
+      height: 12px;
+      background: #020617;
+      border-radius: 999px;
+      overflow: hidden;
+    }
 
-/* ================= AI COACH ================= */
-.ai-card { padding:14px;font-size:13px;display:flex;gap:10px }
-.ai-icon { font-size:18px }
+    .progress span {
+      display: block;
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #38bdf8, #22d3ee);
+      transition: width 0.4s ease;
+    }
 
-/* ================= BUTTONS ================= */
-.preset-grid { display:grid;grid-template-columns:1fr 1fr;gap:10px }
-.preset-btn {
-  padding:14px;text-align:center;font-weight:700;
-  transition:transform .15s;
-}
-.preset-btn:active { transform:scale(.96) }
+    .stat {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
 
-.random-box { margin-top:auto;padding:15px }
-.log-btn {
-  width:100%;padding:15px;border-radius:14px;border:none;
-  background:var(--accent);color:#fff;font-weight:800;
-}
-.log-btn:active { transform:scale(.96) }
+    button {
+      width: 100%;
+      border: none;
+      padding: 14px;
+      border-radius: 14px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: linear-gradient(135deg, #38bdf8, #22d3ee);
+      color: #020617;
+      margin-top: 10px;
+    }
 
-/* ================= RANGE ================= */
-input[type=range] {
-  width:100%;margin:15px 0;height:8px;
-  background:var(--slider-track);border-radius:10px;
-}
+    button:active {
+      transform: scale(0.98);
+    }
 
-/* ================= CONFETTI ================= */
-.confetti { position:fixed;inset:0;pointer-events:none;z-index:999 }
-.confetti span {
-  position:absolute;width:8px;height:14px;border-radius:2px;
-  animation:fall 1.6s ease-out forwards;
-}
-@keyframes fall {
-  to { transform:translateY(120vh) rotate(720deg);opacity:0 }
-}
+    .ai {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      color: #e2e8f0;
+    }
 
-/* ================= WEEKLY REPORT ================= */
-.report-overlay {
-  position:fixed;inset:0;display:none;
-  background:rgba(0,0,0,.45);
-  backdrop-filter:blur(8px);
-  z-index:2000;align-items:center;justify-content:center;
-}
-.report-card { width:90%;max-width:360px;padding:20px }
-.report-row { font-size:13px;margin:6px 0 }
-.report-close {
-  width:100%;margin-top:14px;padding:12px;
-  border:none;border-radius:12px;
-  background:var(--accent);color:#fff;font-weight:800;
-}
-</style>
+    footer {
+      text-align: center;
+      padding: 24px 10px;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+  </style>
 </head>
-
 <body>
-<div id="app">
-  <div class="header">
-    <div>
-      <h1 class="syne" style="margin:0">HydroCamel</h1>
-      <div id="dateLabel" style="font-size:11px;opacity:.6"></div>
-    </div>
-  </div>
 
-  <div class="orb-box">
-    <div class="orb">
-      <div id="streakRing" class="streak-ring"></div>
-      <div id="orbFill" class="orb-fill"></div>
-      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2">
-        <span id="orbPct" class="syne" style="font-size:38px">0%</span>
-        <span style="font-size:9px;letter-spacing:2px;font-weight:700">HYDRATED</span>
-        <div id="streakLabel" class="streak-badge"></div>
+  <header>
+    <h1>HydroCamel</h1>
+    <p>Smart hydration intelligence</p>
+  </header>
+
+  <main>
+    <div class="card">
+      <h2>Today’s Hydration</h2>
+
+      <div class="progress-wrap">
+        <div class="progress">
+          <span id="progressBar"></span>
+        </div>
+      </div>
+
+      <div class="stat">
+        <span id="amountText">0 ml</span>
+        <span>Goal: 2500 ml</span>
+      </div>
+
+      <button id="drinkBtn">+ Drink 250 ml</button>
+    </div>
+
+    <div class="card">
+      <h2>AI Hydration Insight</h2>
+      <div class="ai" id="aiText">
+        Loading hydration intelligence…
       </div>
     </div>
-  </div>
 
-  <div class="stats-grid">
-    <div class="glass-card stat-pill"><div id="statDrank">0ml</div><div>IN</div></div>
-    <div class="glass-card stat-pill"><div id="statRemain">3.0L</div><div>LEFT</div></div>
-    <div class="glass-card stat-pill" style="color:var(--accent)">
-      <div id="statTarget">0ml</div><div>PER HR</div>
+    <div class="card">
+      <h2>Weekly Intelligence Report</h2>
+      <div class="ai" id="weeklyText">
+        Start logging to unlock insights.
+      </div>
     </div>
-  </div>
+  </main>
 
-  <div id="aiCoach" class="glass-card ai-card">
-    <div class="ai-icon">🧠</div>
-    <div id="aiMsg">Loading hydration insight…</div>
-  </div>
+  <footer>
+    Built with 💧 discipline · Works offline
+  </footer>
 
-  <div class="preset-grid">
-    <div class="glass-card preset-btn" onclick="addWater(250)">250ml</div>
-    <div class="glass-card preset-btn" onclick="addWater(500)">500ml</div>
-    <div class="glass-card preset-btn" onclick="addWater(750)">750ml</div>
-    <div class="glass-card preset-btn" onclick="addWater(1000)">1L</div>
-  </div>
+  <script>
+    const GOAL = 2500;
+    const STEP = 250;
 
-  <div class="glass-card random-box">
-    <strong id="rv">150ml</strong>
-    <input type="range" min="50" max="600" step="10" value="150"
-      oninput="rv.textContent=this.value+'ml'">
-    <button class="log-btn" onclick="addWater(+rv.textContent.replace('ml',''))">
-      LOG INTAKE
-    </button>
-  </div>
-</div>
+    const progressBar = document.getElementById("progressBar");
+    const amountText = document.getElementById("amountText");
+    const aiText = document.getElementById("aiText");
+    const weeklyText = document.getElementById("weeklyText");
+    const drinkBtn = document.getElementById("drinkBtn");
 
-<!-- WEEKLY REPORT -->
-<div id="weeklyReport" class="report-overlay">
-  <div class="glass-card report-card">
-    <div class="syne">📊 Weekly Hydration Report</div>
-    <div id="reportBody"></div>
-    <button class="report-close" onclick="weeklyReport.style.display='none'">Got it</button>
-  </div>
-</div>
+    const todayKey = new Date().toISOString().slice(0, 10);
 
-<script>
-/* ================= STATE ================= */
-let st = JSON.parse(localStorage.getItem('hc')) || {
-  goal:3, climate:'norm', wake:14, sleep:6, logs:[], streak:0
-};
+    function loadData() {
+      const data = JSON.parse(localStorage.getItem("hydration") || "{}");
+      return data;
+    }
 
-function save(){ localStorage.setItem('hc',JSON.stringify(st)) }
-function addWater(ml){ st.logs.push({amount:ml,time:Date.now()}); save(); render() }
+    function saveData(data) {
+      localStorage.setItem("hydration", JSON.stringify(data));
+    }
 
-function render(){
-  const now=new Date();
-  document.getElementById('dateLabel').textContent =
-    now.toLocaleDateString(undefined,{weekday:'long',month:'short',day:'numeric'});
+    function updateUI(amount) {
+      const percent = Math.min((amount / GOAL) * 100, 100);
+      progressBar.style.width = percent + "%";
+      amountText.textContent = amount + " ml";
 
-  const drank=st.logs.reduce((a,b)=>a+b.amount,0);
-  let goalMl=st.goal*1000*(st.climate==='hot'?1.2:1);
-  const pct=Math.min(100,drank/goalMl*100);
+      if (amount < 1000) {
+        aiText.textContent = "You’re under-hydrated. Start sipping regularly.";
+      } else if (amount < 2000) {
+        aiText.textContent = "Good progress. Keep steady intake through the day.";
+      } else if (amount < GOAL) {
+        aiText.textContent = "Almost there. One or two more glasses will do it.";
+      } else {
+        aiText.textContent = "Excellent. You’ve reached optimal hydration today.";
+      }
+    }
 
-  orbFill.style.height=pct+'%';
-  orbPct.textContent=Math.round(pct)+'%';
-  statDrank.textContent=drank+'ml';
-  statRemain.textContent=((goalMl-drank)/1000).toFixed(1)+'L';
+    function updateWeekly(data) {
+      const days = Object.values(data);
+      if (days.length < 3) {
+        weeklyText.textContent = "Not enough data yet. Keep logging daily.";
+        return;
+      }
 
-  aiMsg.innerHTML = drank<goalMl
-    ? `💧 Aim for <strong>${Math.round((goalMl-drank)/4/50)*50}ml</strong> soon.`
-    : `🎉 Goal reached. Light sips only.`;
+      const avg = Math.round(days.reduce((a,b) => a + b, 0) / days.length);
+      weeklyText.textContent =
+        "Your average intake is " + avg + " ml/day. " +
+        (avg >= GOAL
+          ? "Consistency is strong. Maintain this habit."
+          : "Try increasing intake gradually for better balance.");
+    }
 
-  if(drank>=goalMl && !st.goalHit){
-    st.goalHit=true; celebrate(); st.streak++; save();
-  }
-}
+    const data = loadData();
+    data[todayKey] = data[todayKey] || 0;
 
-function celebrate(){
-  const c=document.createElement('div');c.className='confetti';
-  for(let i=0;i<40;i++){
-    const s=document.createElement('span');
-    s.style.left=Math.random()*100+'%';
-    s.style.background=`hsl(${Math.random()*360},90%,60%)`;
-    c.appendChild(s);
-  }
-  document.body.appendChild(c);
-  setTimeout(()=>c.remove(),2000);
-}
+    updateUI(data[todayKey]);
+    updateWeekly(data);
 
-render();
-</script>
+    drinkBtn.addEventListener("click", () => {
+      data[todayKey] += STEP;
+      saveData(data);
+      updateUI(data[todayKey]);
+      updateWeekly(data);
+    });
+
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/hydrocamel/sw.js");
+    }
+  </script>
+
 </body>
 </html>
