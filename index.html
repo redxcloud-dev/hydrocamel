@@ -74,12 +74,12 @@
     }
 
     .card {
-      background: linear-gradient(180deg, #020617, #020617cc);
-      border-radius: 18px;
-      padding: 18px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-      border: 1px solid #020617;
-    }
+  background: linear-gradient(180deg, var(--card), color-mix(in srgb, var(--card) 85%, transparent));
+  border-radius: 18px;
+  padding: 18px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+  border: 1px solid color-mix(in srgb, var(--card) 80%, var(--text));
+}
 
     .card h2 {
       font-family: "Syne", sans-serif;
@@ -161,13 +161,29 @@
 }
 
 #themeToggle {
-  background: #020617;
-  border: 1px solid var(--muted);
+  background: var(--card);
+  border: 1px solid rgba(255,255,255,0.15);
   color: var(--text);
-  font-size: 1rem;
-  padding: 6px 10px;
-  border-radius: 10px;
+  font-size: 1.1rem;
+  padding: 8px 14px;
+  border-radius: 999px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 52px;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+#themeToggle:hover {
+  transform: scale(1.05);
+}
+
+/* Light mode override */
+.light #themeToggle {
+  background: #111;
+  color: #fff;
+  border-color: rgba(0,0,0,0.2);
 }
   </style>
 </head>
@@ -176,10 +192,9 @@
 <header>
   <div class="header-row">
     <h1>HydroCamel</h1>
-
-    <button id="themeToggle" aria-label="Toggle theme">
-      🌙
-    </button>
+<button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
+  🌙
+</button>
   </div>
 
   <p>Smart hydration intelligence</p>
