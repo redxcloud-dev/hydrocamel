@@ -225,6 +225,29 @@
 </footer>
 
 <script>
+// Theme handling
+const root = document.documentElement;
+const themeToggle = document.getElementById("themeToggle");
+
+const savedTheme = localStorage.getItem("theme");
+const systemPrefersLight =
+  window.matchMedia &&
+  window.matchMedia("(prefers-color-scheme: light)").matches;
+
+// Apply initial theme
+if (savedTheme === "light" || (!savedTheme && systemPrefersLight)) {
+  root.classList.add("light");
+  themeToggle.textContent = "☀️ Light";
+} else {
+  themeToggle.textContent = "🌙 Dark";
+}
+
+// Toggle theme on click
+themeToggle.onclick = () => {
+  const isLight = root.classList.toggle("light");
+  localStorage.setItem("theme", isLight ? "light" : "dark");
+  themeToggle.textContent = isLight ? "☀️ Light" : "🌙 Dark";
+};
   const STEP = 250;
   const todayKey = new Date().toISOString().slice(0, 10);
 
