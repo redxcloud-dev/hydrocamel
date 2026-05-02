@@ -15,42 +15,38 @@
 
   <style>
     :root {
-  --bg: #0b1220;
-  --card: #020617;
-  --accent: #38bdf8;
-  --text: #e5e7eb;
-  --muted: #94a3b8;
-}
+      --bg: #0b1220;
+      --card: #020617;
+      --accent: #38bdf8;
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+    }
 
-:root.light {
-  --bg: #f8fafc;
-  --card: #ffffff;
-  --accent: #0284c7;
-  --text: #020617;
-  --muted: #475569;
-}
+    :root.light {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --accent: #0284c7;
+      --text: #020617;
+      --muted: #475569;
+    }
 
     * { box-sizing: border-box; }
 
-    html {
-      height: 100%;
-      background: var(--bg);
-    }
-
-    body {
+    html, body {
       margin: 0;
-      min-height: 100vh;
-      min-height: -webkit-fill-available;
+      min-height: 100%;
       font-family: "DM Sans", system-ui, sans-serif;
       background: linear-gradient(180deg, var(--bg), var(--card));
       color: var(--text);
-      padding: env(safe-area-inset-top) env(safe-area-inset-right)
-               env(safe-area-inset-bottom) env(safe-area-inset-left);
     }
 
     header {
       padding: 28px 20px 20px;
-      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 460px;
+      margin: 0 auto;
     }
 
     header h1 {
@@ -61,8 +57,22 @@
 
     header p {
       color: var(--muted);
-      margin-top: 6px;
+      margin: 4px 0 0;
       font-size: 0.95rem;
+    }
+
+    .title {
+      text-align: left;
+    }
+
+    #themeToggle {
+      background: var(--card);
+      border: 1px solid var(--muted);
+      color: var(--text);
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      cursor: pointer;
     }
 
     main {
@@ -74,12 +84,12 @@
     }
 
     .card {
-  background: linear-gradient(180deg, var(--card), color-mix(in srgb, var(--card) 85%, transparent));
-  border-radius: 18px;
-  padding: 18px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
-  border: 1px solid color-mix(in srgb, var(--card) 80%, var(--text));
-}
+      background: linear-gradient(180deg, var(--card), rgba(0,0,0,0.2));
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      border: 1px solid rgba(255,255,255,0.05);
+    }
 
     .card h2 {
       font-family: "Syne", sans-serif;
@@ -90,7 +100,7 @@
     .progress {
       width: 100%;
       height: 12px;
-      background: #020617;
+      background: rgba(0,0,0,0.25);
       border-radius: 999px;
       overflow: hidden;
     }
@@ -126,9 +136,9 @@
 
     .goal-buttons button {
       margin-top: 8px;
-      background: #020617;
+      background: var(--card);
       color: var(--text);
-      border: 1px solid #1e293b;
+      border: 1px solid var(--muted);
     }
 
     .goal-buttons button.active {
@@ -144,7 +154,6 @@
     .ai {
       font-size: 0.95rem;
       line-height: 1.5;
-      color: #e2e8f0;
     }
 
     footer {
@@ -153,52 +162,19 @@
       font-size: 0.75rem;
       color: var(--muted);
     }
-    /* Theme toggle header layout */
-.header-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-#themeToggle {
-  background: var(--card);
-  border: 1px solid rgba(255,255,255,0.15);
-  color: var(--text);
-  font-size: 1.1rem;
-  padding: 8px 14px;
-  border-radius: 999px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 52px;
-  transition: background 0.3s ease, transform 0.2s ease;
-}
-
-#themeToggle:hover {
-  transform: scale(1.05);
-}
-
-/* Light mode override */
-.light #themeToggle {
-  background: #111;
-  color: #fff;
-  border-color: rgba(0,0,0,0.2);
-}
   </style>
 </head>
 
 <body>
-<header>
-  <div class="header-row">
-    <h1>HydroCamel</h1>
-<button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
-  🌙
-</button>
-  </div>
 
-  <p>Smart hydration intelligence</p>
+<header>
+  <div class="title">
+    <h1>HydroCamel</h1>
+    <p>Smart hydration intelligence</p>
+  </div>
+  <button id="themeToggle">🌙 Dark</button>
 </header>
+
 <main>
 
   <div class="card">
@@ -249,32 +225,25 @@
 </footer>
 
 <script>
-// Theme handling
-const root = document.documentElement;
-const themeToggle = document.getElementById("themeToggle");
+  const root = document.documentElement;
+  const toggle = document.getElementById("themeToggle");
 
-const savedTheme = localStorage.getItem("theme");
-const systemPrefersLight =
-  window.matchMedia &&
-  window.matchMedia("(prefers-color-scheme: light)").matches;
+  const saved = localStorage.getItem("theme");
+  const prefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
 
-// Apply initial theme
-if (savedTheme === "light" || (!savedTheme && systemPrefersLight)) {
-  root.classList.add("light");
-  themeToggle.textContent = "☀️ Light";
-} else {
-  themeToggle.textContent = "🌙 Dark";
-}
+  if (saved === "light" || (!saved && prefersLight)) {
+    root.classList.add("light");
+    toggle.textContent = "☀️ Light";
+  }
 
-// Toggle theme on click
-themeToggle.onclick = () => {
-  const isLight = root.classList.toggle("light");
-  localStorage.setItem("theme", isLight ? "light" : "dark");
-  themeToggle.textContent = isLight ? "☀️ Light" : "🌙 Dark";
-};
+  toggle.onclick = () => {
+    const light = root.classList.toggle("light");
+    localStorage.setItem("theme", light ? "light" : "dark");
+    toggle.textContent = light ? "☀️ Light" : "🌙 Dark";
+  };
+
   const STEP = 250;
-  const todayKey = new Date().toISOString().slice(0, 10);
-
+  const todayKey = new Date().toISOString().slice(0,10);
   const data = JSON.parse(localStorage.getItem("hydration") || "{}");
   data[todayKey] = data[todayKey] || 0;
 
@@ -293,12 +262,12 @@ themeToggle.onclick = () => {
   function setGoal(value) {
     GOAL = value;
     localStorage.setItem("goal", value);
-    goalText.textContent = "Goal: " + value + " ml";
-    goalValue.textContent = value + " ml";
+    goalText.textContent = `Goal: ${value} ml`;
+    goalValue.textContent = `${value} ml`;
     customGoal.value = value;
 
-    goalButtons.forEach(btn =>
-      btn.classList.toggle("active", Number(btn.dataset.goal) === value)
+    goalButtons.forEach(b =>
+      b.classList.toggle("active", Number(b.dataset.goal) === value)
     );
 
     updateUI(data[todayKey]);
@@ -307,17 +276,12 @@ themeToggle.onclick = () => {
   function updateUI(amount) {
     const percent = Math.min((amount / GOAL) * 100, 100);
     progressBar.style.width = percent + "%";
-    amountText.textContent = amount + " ml";
+    amountText.textContent = `${amount} ml`;
 
-    if (amount < GOAL * 0.4) {
-      aiText.textContent = "You’re under your hydration curve. Sip steadily.";
-    } else if (amount < GOAL * 0.8) {
-      aiText.textContent = "Good pace. Keep spreading intake across the day.";
-    } else if (amount < GOAL) {
-      aiText.textContent = "Almost there. One or two more glasses.";
-    } else {
-      aiText.textContent = "Goal achieved. Excellent hydration discipline.";
-    }
+    if (amount < GOAL * 0.4) aiText.textContent = "You’re under your hydration curve. Sip steadily.";
+    else if (amount < GOAL * 0.8) aiText.textContent = "Good pace. Keep spreading intake.";
+    else if (amount < GOAL) aiText.textContent = "Almost there. One more glass.";
+    else aiText.textContent = "Goal achieved. Excellent hydration.";
   }
 
   function updateWeekly() {
@@ -326,11 +290,8 @@ themeToggle.onclick = () => {
       weeklyText.textContent = "Log a few more days to unlock insights.";
       return;
     }
-
     const avg = Math.round(days.reduce((a,b)=>a+b,0)/days.length);
-    weeklyText.textContent =
-      `Average intake: ${avg} ml/day. ` +
-      (avg >= GOAL ? "Strong consistency." : "Try nudging intake higher.");
+    weeklyText.textContent = `Average intake: ${avg} ml/day.`;
   }
 
   drinkBtn.onclick = () => {
@@ -340,18 +301,11 @@ themeToggle.onclick = () => {
     updateWeekly();
   };
 
-  goalButtons.forEach(btn =>
-    btn.onclick = () => setGoal(Number(btn.dataset.goal))
-  );
-
+  goalButtons.forEach(b => b.onclick = () => setGoal(Number(b.dataset.goal)));
   customGoal.oninput = e => setGoal(Number(e.target.value));
 
   setGoal(GOAL);
   updateWeekly();
-
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("/hydrocamel/sw.js");
-  }
 </script>
 
 </body>
