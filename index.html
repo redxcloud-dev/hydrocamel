@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<link rel="manifest" href="/hydrocamel/manifest.json">
-<meta name="theme-color" content="#0b1220">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Viewport & PWA -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b1220">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <link rel="manifest" href="/hydrocamel/manifest.json">
+
   <title>HydroCamel</title>
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;600&display=swap" rel="stylesheet">
 
-  <!-- PWA -->
-  <meta name="theme-color" content="#0f172a" />
-
   <style>
     :root {
-      --bg: #0f172a;
+      --bg: #0b1220;
       --card: #020617;
       --accent: #38bdf8;
       --text: #e5e7eb;
@@ -29,16 +29,27 @@
       box-sizing: border-box;
     }
 
+    html {
+      height: 100%;
+      background: var(--bg);
+    }
+
     body {
       margin: 0;
-      font-family: "DM Sans", system-ui, sans-serif;
-      background: radial-gradient(1200px 600px at top, #0b1225, var(--bg));
-      color: var(--text);
       min-height: 100vh;
+      min-height: -webkit-fill-available;
+      font-family: "DM Sans", system-ui, sans-serif;
+      background: linear-gradient(180deg, #0b1220, #020617);
+      color: var(--text);
+
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+      padding-left: env(safe-area-inset-left);
+      padding-right: env(safe-area-inset-right);
     }
 
     header {
-      padding: 24px 20px;
+      padding: 28px 20px 20px;
       text-align: center;
     }
 
@@ -75,10 +86,6 @@
       font-family: "Syne", sans-serif;
       font-size: 1.2rem;
       margin: 0 0 10px 0;
-    }
-
-    .progress-wrap {
-      margin-top: 10px;
     }
 
     .progress {
@@ -130,12 +137,13 @@
 
     footer {
       text-align: center;
-      padding: 24px 10px;
+      padding: 28px 10px;
       font-size: 0.75rem;
       color: var(--muted);
     }
   </style>
 </head>
+
 <body>
 
   <header>
@@ -147,10 +155,8 @@
     <div class="card">
       <h2>Today’s Hydration</h2>
 
-      <div class="progress-wrap">
-        <div class="progress">
-          <span id="progressBar"></span>
-        </div>
+      <div class="progress">
+        <span id="progressBar"></span>
       </div>
 
       <div class="stat">
@@ -163,16 +169,12 @@
 
     <div class="card">
       <h2>AI Hydration Insight</h2>
-      <div class="ai" id="aiText">
-        Loading hydration intelligence…
-      </div>
+      <div class="ai" id="aiText">Loading hydration intelligence…</div>
     </div>
 
     <div class="card">
       <h2>Weekly Intelligence Report</h2>
-      <div class="ai" id="weeklyText">
-        Start logging to unlock insights.
-      </div>
+      <div class="ai" id="weeklyText">Start logging to unlock insights.</div>
     </div>
   </main>
 
@@ -192,14 +194,8 @@
 
     const todayKey = new Date().toISOString().slice(0, 10);
 
-    function loadData() {
-      const data = JSON.parse(localStorage.getItem("hydration") || "{}");
-      return data;
-    }
-
-    function saveData(data) {
-      localStorage.setItem("hydration", JSON.stringify(data));
-    }
+    const data = JSON.parse(localStorage.getItem("hydration") || "{}");
+    data[todayKey] = data[todayKey] || 0;
 
     function updateUI(amount) {
       const percent = Math.min((amount / GOAL) * 100, 100);
@@ -217,14 +213,14 @@
       }
     }
 
-    function updateWeekly(data) {
+    function updateWeekly() {
       const days = Object.values(data);
       if (days.length < 3) {
         weeklyText.textContent = "Not enough data yet. Keep logging daily.";
         return;
       }
 
-      const avg = Math.round(days.reduce((a,b) => a + b, 0) / days.length);
+      const avg = Math.round(days.reduce((a, b) => a + b, 0) / days.length);
       weeklyText.textContent =
         "Your average intake is " + avg + " ml/day. " +
         (avg >= GOAL
@@ -232,18 +228,15 @@
           : "Try increasing intake gradually for better balance.");
     }
 
-    const data = loadData();
-    data[todayKey] = data[todayKey] || 0;
-
     updateUI(data[todayKey]);
-    updateWeekly(data);
+    updateWeekly();
 
-    drinkBtn.addEventListener("click", () => {
+    drinkBtn.onclick = () => {
       data[todayKey] += STEP;
-      saveData(data);
+      localStorage.setItem("hydration", JSON.stringify(data));
       updateUI(data[todayKey]);
-      updateWeekly(data);
-    });
+      updateWeekly();
+    };
 
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("/hydrocamel/sw.js");
