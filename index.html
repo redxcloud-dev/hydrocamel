@@ -1,311 +1,199 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#0b1220">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta charset="UTF-8" />
+<title>HydroCamel</title>
 
-  <link rel="manifest" href="/hydrocamel/manifest.json">
+<style>
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #f7f9fb;
+  text-align: center;
+  padding: 40px;
+}
 
-  <title>HydroCamel</title>
+h1 { margin-bottom: 4px; }
+.subtitle { color: #666; margin-bottom: 24px; }
 
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;600&display=swap" rel="stylesheet">
+.intake {
+  font-size: 36px;
+  font-weight: 700;
+}
 
-  <style>
-    :root {
-      --bg: #0b1220;
-      --card: #020617;
-      --accent: #38bdf8;
-      --text: #e5e7eb;
-      --muted: #94a3b8;
-    }
+.camel-wrapper {
+  position: relative;
+  width: 280px;
+  margin: 24px auto 8px;
+}
 
-    :root.light {
-      --bg: #f8fafc;
-      --card: #ffffff;
-      --accent: #0284c7;
-      --text: #020617;
-      --muted: #475569;
-    }
+.camel-wrapper img {
+  width: 100%;
+}
 
-    * { box-sizing: border-box; }
+.float-text {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-weight: 700;
+  color: #4fb6b8;
+  animation: floatUp 1s ease-out forwards;
+}
 
-    html, body {
-      margin: 0;
-      min-height: 100%;
-      font-family: "DM Sans", system-ui, sans-serif;
-      background: linear-gradient(180deg, var(--bg), var(--card));
-      color: var(--text);
-    }
+@keyframes floatUp {
+  from { opacity: 1; transform: translate(-50%, 0); }
+  to { opacity: 0; transform: translate(-50%, -40px); }
+}
 
-    header {
-      padding: 28px 20px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      max-width: 460px;
-      margin: 0 auto;
-    }
+.heart {
+  position: absolute;
+  width: 24px;
+  animation: pop 0.8s ease-out forwards;
+}
 
-    header h1 {
-      font-family: "Syne", sans-serif;
-      font-size: 2.2rem;
-      margin: 0;
-    }
+@keyframes pop {
+  from { opacity: 1; transform: scale(0.6); }
+  to { opacity: 0; transform: scale(1.4) translateY(-30px); }
+}
 
-    header p {
-      color: var(--muted);
-      margin: 4px 0 0;
-      font-size: 0.95rem;
-    }
+.status {
+  min-height: 24px;
+  margin-bottom: 20px;
+  color: #444;
+}
 
-    .title {
-      text-align: left;
-    }
+.controls {
+  width: 260px;
+  margin: 0 auto 16px;
+}
 
-    #themeToggle {
-      background: var(--card);
-      border: 1px solid var(--muted);
-      color: var(--text);
-      padding: 8px 14px;
-      border-radius: 999px;
-      font-size: 0.9rem;
-      cursor: pointer;
-    }
+button {
+  background: #4fb6b8;
+  color: white;
+  border: none;
+  padding: 14px 22px;
+  border-radius: 12px;
+  font-size: 16px;
+  cursor: pointer;
+}
 
-    main {
-      max-width: 460px;
-      margin: 0 auto;
-      padding: 12px;
-      display: grid;
-      gap: 16px;
-    }
+.confetti {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  background: gold;
+  animation: confettiFall 2s linear forwards;
+}
 
-    .card {
-      background: linear-gradient(180deg, var(--card), rgba(0,0,0,0.2));
-      border-radius: 18px;
-      padding: 18px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
-      border: 1px solid rgba(255,255,255,0.05);
-    }
-
-    .card h2 {
-      font-family: "Syne", sans-serif;
-      font-size: 1.2rem;
-      margin: 0 0 12px;
-    }
-
-    .progress {
-      width: 100%;
-      height: 12px;
-      background: rgba(0,0,0,0.25);
-      border-radius: 999px;
-      overflow: hidden;
-    }
-
-    .progress span {
-      display: block;
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #38bdf8, #22d3ee);
-      transition: width 0.4s ease;
-    }
-
-    .stat {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 10px;
-      font-size: 0.9rem;
-      color: var(--muted);
-    }
-
-    button {
-      width: 100%;
-      border: none;
-      padding: 14px;
-      border-radius: 14px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      background: linear-gradient(135deg, #38bdf8, #22d3ee);
-      color: #020617;
-      margin-top: 10px;
-    }
-
-    .goal-buttons button {
-      margin-top: 8px;
-      background: var(--card);
-      color: var(--text);
-      border: 1px solid var(--muted);
-    }
-
-    .goal-buttons button.active {
-      background: linear-gradient(135deg, #38bdf8, #22d3ee);
-      color: #020617;
-    }
-
-    input[type="range"] {
-      width: 100%;
-      margin-top: 10px;
-    }
-
-    .ai {
-      font-size: 0.95rem;
-      line-height: 1.5;
-    }
-
-    footer {
-      text-align: center;
-      padding: 28px 10px;
-      font-size: 0.75rem;
-      color: var(--muted);
-    }
-  </style>
+@keyframes confettiFall {
+  to { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+}
+</style>
 </head>
 
 <body>
 
-<header>
-  <div class="title">
-    <h1>HydroCamel</h1>
-    <p>Smart hydration intelligence</p>
+<h1>HydroCamel</h1>
+<div class="subtitle">Smart hydration intelligence</div>
+
+<div class="intake">
+  <span id="currentMl">0</span> ml
+  <div style="font-size:16px;color:#666;">
+    of <span>2500</span> ml
   </div>
-  <button id="themeToggle">🌙 Dark</button>
-</header>
+</div>
 
-<main>
+<div class="camel-wrapper" id="camelWrapper">
+  <img id="camel" src="camel-normal.png" />
+</div>
 
-  <div class="card">
-    <h2>Daily Goal</h2>
+<div class="status" id="status">Start hydrating 💧</div>
 
-    <div class="goal-buttons">
-      <button data-goal="2000">2000 ml · Light</button>
-      <button data-goal="2500">2500 ml · Normal</button>
-      <button data-goal="3000">3000 ml · Active</button>
-    </div>
+<div class="controls">
+  <input type="range" id="slider" min="100" max="500" step="50" value="300">
+  <div><strong><span id="sliderVal">300</span> ml</strong></div>
+</div>
 
-    <input type="range" min="1500" max="4000" step="250" id="customGoal">
-    <div class="stat">
-      <span>Custom goal</span>
-      <span id="goalValue">2500 ml</span>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>Today’s Hydration</h2>
-
-    <div class="progress">
-      <span id="progressBar"></span>
-    </div>
-
-    <div class="stat">
-      <span id="amountText">0 ml</span>
-      <span id="goalText">Goal: 2500 ml</span>
-    </div>
-
-    <button id="drinkBtn">+ Drink 250 ml</button>
-  </div>
-
-  <div class="card">
-    <h2>AI Hydration Insight</h2>
-    <div class="ai" id="aiText"></div>
-  </div>
-
-  <div class="card">
-    <h2>Weekly Intelligence Report</h2>
-    <div class="ai" id="weeklyText"></div>
-  </div>
-
-</main>
-
-<footer>
-  Built with 💧 discipline · Works offline
-</footer>
+<button onclick="drink()">Add water</button>
 
 <script>
-  const root = document.documentElement;
-  const toggle = document.getElementById("themeToggle");
+const GOAL = 2500;
+let total = Number(localStorage.getItem("hydro-total")) || 0;
 
-  const saved = localStorage.getItem("theme");
-  const prefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
+const camel = document.getElementById("camel");
+const currentMl = document.getElementById("currentMl");
+const status = document.getElementById("status");
+const wrapper = document.getElementById("camelWrapper");
+const slider = document.getElementById("slider");
+const sliderVal = document.getElementById("sliderVal");
 
-  if (saved === "light" || (!saved && prefersLight)) {
-    root.classList.add("light");
-    toggle.textContent = "☀️ Light";
+currentMl.textContent = total;
+
+slider.oninput = () => sliderVal.textContent = slider.value;
+
+function setCamel(src, time = 600) {
+  camel.src = src;
+  setTimeout(() => camel.src = "camel-normal.png", time);
+}
+
+function floatText(text) {
+  const el = document.createElement("div");
+  el.className = "float-text";
+  el.textContent = text;
+  wrapper.appendChild(el);
+  setTimeout(() => el.remove(), 1000);
+}
+
+function heartPop() {
+  const heart = document.createElement("img");
+  heart.src = "heart.png";
+  heart.className = "heart";
+  heart.style.left = Math.random() * 80 + "px";
+  wrapper.appendChild(heart);
+  setTimeout(() => heart.remove(), 800);
+}
+
+function confetti() {
+  for (let i = 0; i < 30; i++) {
+    const c = document.createElement("div");
+    c.className = "confetti";
+    c.style.left = Math.random() * 100 + "vw";
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 2000);
   }
+}
 
-  toggle.onclick = () => {
-    const light = root.classList.toggle("light");
-    localStorage.setItem("theme", light ? "light" : "dark");
-    toggle.textContent = light ? "☀️ Light" : "🌙 Dark";
-  };
+function drink() {
+  if (total >= GOAL) return;
 
-  const STEP = 250;
-  const todayKey = new Date().toISOString().slice(0,10);
-  const data = JSON.parse(localStorage.getItem("hydration") || "{}");
-  data[todayKey] = data[todayKey] || 0;
+  const amount = Number(slider.value);
+  total += amount;
+  if (total > GOAL) total = GOAL;
 
-  let GOAL = Number(localStorage.getItem("goal")) || 2500;
+  localStorage.setItem("hydro-total", total);
+  currentMl.textContent = total;
 
-  const progressBar = document.getElementById("progressBar");
-  const amountText = document.getElementById("amountText");
-  const goalText = document.getElementById("goalText");
-  const aiText = document.getElementById("aiText");
-  const weeklyText = document.getElementById("weeklyText");
-  const drinkBtn = document.getElementById("drinkBtn");
-  const goalButtons = document.querySelectorAll(".goal-buttons button");
-  const customGoal = document.getElementById("customGoal");
-  const goalValue = document.getElementById("goalValue");
+  floatText(`+${amount} ml`);
 
-  function setGoal(value) {
-    GOAL = value;
-    localStorage.setItem("goal", value);
-    goalText.textContent = `Goal: ${value} ml`;
-    goalValue.textContent = `${value} ml`;
-    customGoal.value = value;
-
-    goalButtons.forEach(b =>
-      b.classList.toggle("active", Number(b.dataset.goal) === value)
-    );
-
-    updateUI(data[todayKey]);
+  if (total === GOAL) {
+    setCamel("camel-kiss.png", 1200);
+    status.textContent = "Goal achieved! 🎉";
+    confetti();
   }
-
-  function updateUI(amount) {
-    const percent = Math.min((amount / GOAL) * 100, 100);
-    progressBar.style.width = percent + "%";
-    amountText.textContent = `${amount} ml`;
-
-    if (amount < GOAL * 0.4) aiText.textContent = "You’re under your hydration curve. Sip steadily.";
-    else if (amount < GOAL * 0.8) aiText.textContent = "Good pace. Keep spreading intake.";
-    else if (amount < GOAL) aiText.textContent = "Almost there. One more glass.";
-    else aiText.textContent = "Goal achieved. Excellent hydration.";
+  else if (total % 500 === 0) {
+    setCamel("camel-kiss.png");
+    heartPop();
+    status.textContent = "Nice hydration 😘";
   }
-
-  function updateWeekly() {
-    const days = Object.values(data);
-    if (days.length < 3) {
-      weeklyText.textContent = "Log a few more days to unlock insights.";
-      return;
-    }
-    const avg = Math.round(days.reduce((a,b)=>a+b,0)/days.length);
-    weeklyText.textContent = `Average intake: ${avg} ml/day.`;
+  else if (total / GOAL >= 0.75) {
+    setCamel("camel-wink.png");
+    status.textContent = "Almost there 😉";
   }
-
-  drinkBtn.onclick = () => {
-    data[todayKey] += STEP;
-    localStorage.setItem("hydration", JSON.stringify(data));
-    updateUI(data[todayKey]);
-    updateWeekly();
-  };
-
-  goalButtons.forEach(b => b.onclick = () => setGoal(Number(b.dataset.goal)));
-  customGoal.oninput = e => setGoal(Number(e.target.value));
-
-  setGoal(GOAL);
-  updateWeekly();
+  else {
+    setCamel("camel-blink.png");
+    status.textContent = "Good rhythm. Keep going.";
+  }
+}
 </script>
 
 </body>
