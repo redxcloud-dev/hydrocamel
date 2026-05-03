@@ -1,200 +1,199 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<title>HydroCamel</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<style>
-body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  background: #f7f9fb;
-  text-align: center;
-  padding: 40px;
-}
+  <title>HydroCamel</title>
 
-h1 { margin-bottom: 4px; }
-.subtitle { color: #666; margin-bottom: 24px; }
+  <!-- ICONS (this brings icon-512.png BACK) -->
+  <link rel="icon" href="icon-512.png" sizes="512x512">
+  <link rel="apple-touch-icon" href="icon-512.png">
 
-.intake {
-  font-size: 36px;
-  font-weight: 700;
-}
+  <style>
+    :root {
+      --bg: #f7f9fb;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --accent: #2bb0ed;
+    }
 
-.camel-wrapper {
-  position: relative;
-  width: 280px;
-  margin: 24px auto 8px;
-}
+    * {
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
 
-.camel-wrapper img {
-  width: 100%;
-}
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--text);
+    }
 
-.float-text {
-  position: absolute;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-weight: 700;
-  color: #4fb6b8;
-  animation: floatUp 1s ease-out forwards;
-}
+    .app {
+      width: 100%;
+      max-width: 420px;
+      padding: 32px 24px 40px;
+      text-align: center;
+    }
 
-@keyframes floatUp {
-  from { opacity: 1; transform: translate(-50%, 0); }
-  to { opacity: 0; transform: translate(-50%, -40px); }
-}
+    h1 {
+      margin: 0;
+      font-size: 28px;
+      font-weight: 700;
+    }
 
-.heart {
-  position: absolute;
-  width: 24px;
-  animation: pop 0.8s ease-out forwards;
-}
+    .subtitle {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 14px;
+    }
 
-@keyframes pop {
-  from { opacity: 1; transform: scale(0.6); }
-  to { opacity: 0; transform: scale(1.4) translateY(-30px); }
-}
+    .amount {
+      margin-top: 28px;
+      font-size: 42px;
+      font-weight: 800;
+    }
 
-.status {
-  min-height: 24px;
-  margin-bottom: 20px;
-  color: #444;
-}
+    .goal {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 15px;
+    }
 
-.controls {
-  width: 260px;
-  margin: 0 auto 16px;
-}
+    .camel-wrap {
+      margin: 30px 0 16px;
+    }
 
-button {
-  background: #4fb6b8;
-  color: white;
-  border: none;
-  padding: 14px 22px;
-  border-radius: 12px;
-  font-size: 16px;
-  cursor: pointer;
-}
+    .camel {
+      width: 260px;
+      height: auto;
+      transition: transform 0.2s ease;
+    }
 
-.confetti {
-  position: fixed;
-  width: 8px;
-  height: 8px;
-  background: gold;
-  animation: confettiFall 2s linear forwards;
-}
+    .message {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 14px;
+    }
 
-@keyframes confettiFall {
-  to { transform: translateY(100vh) rotate(360deg); opacity: 0; }
-}
-</style>
+    .slider-wrap {
+      margin-top: 28px;
+    }
+
+    input[type="range"] {
+      width: 100%;
+    }
+
+    .slider-value {
+      margin-top: 8px;
+      font-weight: 600;
+    }
+
+    button {
+      margin-top: 18px;
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      border-radius: 12px;
+      border: none;
+      background: var(--accent);
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    footer {
+      margin-top: 28px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+  </style>
 </head>
 
 <body>
+  <div class="app">
+    <h1>HydroCamel</h1>
+    <div class="subtitle">Smart hydration intelligence</div>
 
-<h1>HydroCamel</h1>
-<div class="subtitle">Smart hydration intelligence</div>
+    <div class="amount" id="total">0 ml</div>
+    <div class="goal">of 2500 ml</div>
 
-<div class="intake">
-  <span id="currentMl">0</span> ml
-  <div style="font-size:16px;color:#666;">
-    of <span>2500</span> ml
+    <div class="camel-wrap">
+      <img
+        id="camel"
+        class="camel"
+        src="camel-normal.png"
+        alt="Camel"
+      />
+    </div>
+
+    <div class="message" id="message">Start hydrating 💧</div>
+
+    <div class="slider-wrap">
+      <input
+        type="range"
+        min="100"
+        max="500"
+        step="50"
+        value="300"
+        id="slider"
+      />
+      <div class="slider-value">
+        <span id="sliderValue">300</span> ml
+      </div>
+    </div>
+
+    <button onclick="addWater()">Add water</button>
+
+    <footer>Calm · Private · Offline-friendly</footer>
   </div>
-</div>
 
-<div class="camel-wrapper" id="camelWrapper">
-  <img id="camel" src="camel-normal.png" />
-</div>
+  <script>
+    let total = 0;
+    const goal = 2500;
 
-<div class="status" id="status">Start hydrating 💧</div>
+    const camel = document.getElementById("camel");
+    const totalEl = document.getElementById("total");
+    const slider = document.getElementById("slider");
+    const sliderValue = document.getElementById("sliderValue");
+    const message = document.getElementById("message");
 
-<div class="controls">
-  <input type="range" id="slider" min="100" max="500" step="50" value="300">
-  <div><strong><span id="sliderVal">300</span> ml</strong></div>
-</div>
+    slider.addEventListener("input", () => {
+      sliderValue.textContent = slider.value;
+    });
 
-<button onclick="drink()">Add water</button>
+    function setCamel(src, duration = 700) {
+      camel.src = src;
+      setTimeout(() => {
+        camel.src = "camel-normal.png";
+      }, duration);
+    }
 
-<script>
-const GOAL = 2500;
-let total = Number(localStorage.getItem("hydro-total")) || 0;
+    function addWater() {
+      const amount = parseInt(slider.value, 10);
+      total = Math.min(goal, total + amount);
+      totalEl.textContent = `${total} ml`;
 
-const camel = document.getElementById("camel");
-const currentMl = document.getElementById("currentMl");
-const status = document.getElementById("status");
-const wrapper = document.getElementById("camelWrapper");
-const slider = document.getElementById("slider");
-const sliderVal = document.getElementById("sliderVal");
+      // Reactions
+      if (amount >= 500) {
+        setCamel("camel-kiss.png", 900);
+        message.textContent = "Camel loves you 😘";
+      } else if (total % 2 === 0) {
+        setCamel("camel-blink.png", 500);
+        message.textContent = "Nice sip!";
+      } else {
+        setCamel("camel-wink.png", 600);
+        message.textContent = "Keep going 😉";
+      }
 
-currentMl.textContent = total;
-
-slider.oninput = () => sliderVal.textContent = slider.value;
-
-function setCamel(src, time = 600) {
-  camel.src = src;
-  setTimeout(() => camel.src = "camel-normal.png", time);
-}
-
-function floatText(text) {
-  const el = document.createElement("div");
-  el.className = "float-text";
-  el.textContent = text;
-  wrapper.appendChild(el);
-  setTimeout(() => el.remove(), 1000);
-}
-
-function heartPop() {
-  const heart = document.createElement("img");
-  heart.src = "heart.png";
-  heart.className = "heart";
-  heart.style.left = Math.random() * 80 + "px";
-  wrapper.appendChild(heart);
-  setTimeout(() => heart.remove(), 800);
-}
-
-function confetti() {
-  for (let i = 0; i < 30; i++) {
-    const c = document.createElement("div");
-    c.className = "confetti";
-    c.style.left = Math.random() * 100 + "vw";
-    document.body.appendChild(c);
-    setTimeout(() => c.remove(), 2000);
-  }
-}
-
-function drink() {
-  if (total >= GOAL) return;
-
-  const amount = Number(slider.value);
-  total += amount;
-  if (total > GOAL) total = GOAL;
-
-  localStorage.setItem("hydro-total", total);
-  currentMl.textContent = total;
-
-  floatText(`+${amount} ml`);
-
-  if (total === GOAL) {
-    setCamel("camel-kiss.png", 1200);
-    status.textContent = "Goal achieved! 🎉";
-    confetti();
-  }
-  else if (total % 500 === 0) {
-    setCamel("camel-kiss.png");
-    heartPop();
-    status.textContent = "Nice hydration 😘";
-  }
-  else if (total / GOAL >= 0.75) {
-    setCamel("camel-wink.png");
-    status.textContent = "Almost there 😉";
-  }
-  else {
-    setCamel("camel-blink.png");
-    status.textContent = "Good rhythm. Keep going.";
-  }
-}
-</script>
-
+      if (total >= goal) {
+        message.textContent = "Goal achieved 🎉 Amazing!";
+      }
+    }
+  </script>
 </body>
 </html>
