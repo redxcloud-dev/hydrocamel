@@ -16,6 +16,7 @@
       --text: #1f2937;
       --muted: #6b7280;
       --accent: #2bb0ed;
+      --heart: #ff4d6d;
     }
 
     * {
@@ -111,7 +112,7 @@
       color: var(--muted);
     }
 
-    /* Floating +ML animation */
+    /* Floating +ml */
     .float {
       position: absolute;
       left: 50%;
@@ -121,6 +122,17 @@
       font-weight: 700;
       color: var(--accent);
       animation: floatUp 1s ease forwards;
+      pointer-events: none;
+    }
+
+    /* Heart pop */
+    .heart {
+      position: absolute;
+      right: 20%;
+      top: 20%;
+      font-size: 28px;
+      color: var(--heart);
+      animation: heartPop 1s ease forwards;
       pointer-events: none;
     }
 
@@ -135,6 +147,21 @@
       to {
         opacity: 0;
         transform: translate(-50%, -40px);
+      }
+    }
+
+    @keyframes heartPop {
+      from {
+        opacity: 0;
+        transform: scale(0.5) translateY(10px);
+      }
+      30% {
+        opacity: 1;
+        transform: scale(1.2) translateY(0);
+      }
+      to {
+        opacity: 0;
+        transform: scale(0.8) translateY(-30px);
       }
     }
   </style>
@@ -200,8 +227,15 @@
       el.className = "float";
       el.textContent = `+${amount} ml`;
       camelWrap.appendChild(el);
-
       setTimeout(() => el.remove(), 1000);
+    }
+
+    function popHeart() {
+      const heart = document.createElement("div");
+      heart.className = "heart";
+      heart.textContent = "❤️";
+      camelWrap.appendChild(heart);
+      setTimeout(() => heart.remove(), 1000);
     }
 
     function addWater() {
@@ -214,6 +248,7 @@
 
       if (amount >= 500) {
         react("camel-kiss.png", 900);
+        popHeart();
         message.textContent = "Camel loves you 😘";
       } else {
         react("camel-blink.png", 500);
