@@ -14,7 +14,6 @@
       --text: #1f2937;
       --muted: #6b7280;
       --accent: #2bb0ed;
-      --heart: #ff4d6d;
     }
 
     * {
@@ -38,8 +37,6 @@
       max-width: 420px;
       padding: 32px 24px 40px;
       text-align: center;
-      position: relative;
-      z-index: 2;
     }
 
     h1 { font-size: 28px; margin: 0; }
@@ -53,12 +50,20 @@
 
     .goal { color: var(--muted); }
 
-    .camel-wrap { margin: 30px 0 16px; position: relative; }
-    .camel { width: 260px; }
+    .camel-wrap {
+      position: relative;
+      margin: 30px 0 16px;
+    }
 
-    .message { color: var(--muted); font-size: 14px; }
+    .camel {
+      width: 260px;
+    }
 
-    .slider-wrap { margin-top: 28px; }
+    .message {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
     input[type="range"] { width: 100%; }
 
     button {
@@ -74,15 +79,19 @@
       cursor: pointer;
     }
 
-    footer { margin-top: 28px; font-size: 12px; color: var(--muted); }
+    footer {
+      margin-top: 28px;
+      font-size: 12px;
+      color: var(--muted);
+    }
 
     .float {
       position: absolute;
       left: 50%;
       top: 0;
       transform: translateX(-50%);
-      animation: floatUp 1s ease forwards;
       font-weight: 700;
+      animation: floatUp 1s ease forwards;
     }
 
     .heart {
@@ -98,7 +107,6 @@
       width: 8px;
       height: 14px;
       animation: confettiFall linear forwards;
-      z-index: 1;
     }
 
     @keyframes floatUp {
@@ -129,10 +137,8 @@
 
   <div class="message" id="message">Start hydrating 💧</div>
 
-  <div class="slider-wrap">
-    <input type="range" min="100" max="500" step="50" id="slider">
-    <div><span id="sliderValue"></span> ml</div>
-  </div>
+  <input type="range" min="100" max="500" step="50" id="slider">
+  <div><span id="sliderValue"></span> ml</div>
 
   <button onclick="addWater()">Add water</button>
   <footer>Calm · Private · Offline-friendly</footer>
@@ -140,6 +146,7 @@
 
 <script>
 const GOAL = 2500;
+
 const camel = document.getElementById("camel");
 const camelWrap = document.getElementById("camelWrap");
 const totalEl = document.getElementById("total");
@@ -148,7 +155,8 @@ const sliderValue = document.getElementById("sliderValue");
 const message = document.getElementById("message");
 
 let total = Number(localStorage.getItem("hydrocamel-total")) || 0;
-let goalReached = total >= GOAL;
+let lastMilestone = Number(localStorage.getItem("hydrocamel-milestone")) || 0;
+let goalReached = localStorage.getItem("hydrocamel-goal") === "true";
 let confettiShown = localStorage.getItem("hydrocamel-confetti") === "true";
 
 totalEl.textContent = `${total} ml`;
@@ -160,7 +168,7 @@ slider.oninput = () => {
   localStorage.setItem("hydrocamel-slider", slider.value);
 };
 
-function react(src, duration = 700) {
+function react(src, duration = 600) {
   camel.src = src;
   setTimeout(() => camel.src = "camel-normal.png", duration);
 }
@@ -190,7 +198,7 @@ function launchConfetti() {
     const c = document.createElement("div");
     c.className = "confetti";
     c.style.left = Math.random() * 100 + "vw";
-    c.style.background = ["#2bb0ed","#ff4d6d","#22c55e","#facc15"][i%4];
+    c.style.background = ["#2bb0ed","#ff4d6d","#22c55e","#facc15"][i % 4];
     c.style.animationDuration = 2 + Math.random() * 2 + "s";
     document.body.appendChild(c);
     setTimeout(() => c.remove(), 4000);
@@ -205,10 +213,14 @@ function addWater() {
 
   floatAmount(amount);
 
-  if (amount >= 500) {
+  const milestone = Math.floor(total / 500);
+
+  if (milestone > lastMilestone && total < GOAL) {
     react("camel-kiss.png", 900);
     popHeart();
-    message.textContent = "Camel loves you 😘";
+    message.textContent = "Camel loves your consistency 😘";
+    lastMilestone = milestone;
+    localStorage.setItem("hydrocamel-milestone", milestone);
   } else {
     react("camel-blink.png", 500);
     message.textContent = "Nice sip!";
@@ -218,6 +230,7 @@ function addWater() {
     goalReached = true;
     camel.src = "camel-wink.png";
     message.textContent = "Goal achieved 🎉";
+    localStorage.setItem("hydrocamel-goal", "true");
     launchConfetti();
   }
 }
