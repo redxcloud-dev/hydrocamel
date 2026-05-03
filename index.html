@@ -29,15 +29,31 @@
       background: var(--bg);
       display: flex;
       justify-content: center;
-      align-items: flex-start; /* ✅ FIX */
+      align-items: flex-start;
       color: var(--text);
       overflow-x: hidden;
+    }
+
+    /* Settings icon */
+    .settings-btn {
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: none;
+      background: white;
+      font-size: 20px;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+      z-index: 20;
     }
 
     .app {
       width: 100%;
       max-width: 420px;
-      padding: 24px 20px 32px; /* ✅ FIX */
+      padding: 24px 20px 32px;
       text-align: center;
       position: relative;
     }
@@ -73,7 +89,7 @@
 
     .camel {
       width: 220px;
-      max-width: 70vw; /* ✅ FIX */
+      max-width: 70vw;
       height: auto;
     }
 
@@ -96,7 +112,7 @@
       font-weight: 600;
     }
 
-    button {
+    button.main-btn {
       margin-top: 18px;
       width: 100%;
       padding: 14px;
@@ -171,6 +187,10 @@
 </head>
 
 <body>
+
+  <!-- Settings Button -->
+  <button class="settings-btn" onclick="openSettings()">⚙️</button>
+
   <div class="app">
     <h1>HydroCamel</h1>
     <div class="subtitle">Smart hydration intelligence</div>
@@ -189,7 +209,8 @@
       <div class="slider-value"><span id="sliderValue"></span> ml</div>
     </div>
 
-    <button onclick="addWater()">Add water</button>
+    <button class="main-btn" onclick="addWater()">Add water</button>
+
     <footer>Calm · Private · Offline-friendly</footer>
   </div>
 
@@ -256,16 +277,18 @@
 
     function addWater() {
       const amount = Number(slider.value);
+      const prevTotal = total;
+
       total = Math.min(GOAL, total + amount);
       totalEl.textContent = `${total} ml`;
       localStorage.setItem("hydrocamel-total", total);
 
       floatAmount(amount);
 
-      const milestone = Math.floor(total / 500);
-      const prevMilestone = Math.floor((total - amount) / 500);
+      const prevMilestone = Math.floor(prevTotal / 500);
+      const newMilestone = Math.floor(total / 500);
 
-      if (milestone > prevMilestone) {
+      if (newMilestone > prevMilestone) {
         react("camel-kiss.png", 900);
         popHeart();
         message.textContent = "500 ml achieved 💖";
@@ -280,6 +303,11 @@
         launchConfetti();
       }
     }
+
+    function openSettings() {
+      alert("Settings screen coming next");
+    }
   </script>
+
 </body>
 </html>
