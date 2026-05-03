@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>HydroCamel</title>
 
-  <!-- App Icon -->
   <link rel="icon" href="icon-512.png" sizes="512x512">
   <link rel="apple-touch-icon" href="icon-512.png">
 
@@ -43,17 +42,8 @@
       z-index: 2;
     }
 
-    h1 {
-      margin: 0;
-      font-size: 28px;
-      font-weight: 700;
-    }
-
-    .subtitle {
-      margin-top: 4px;
-      color: var(--muted);
-      font-size: 14px;
-    }
+    h1 { font-size: 28px; margin: 0; }
+    .subtitle { color: var(--muted); font-size: 14px; }
 
     .amount {
       margin-top: 28px;
@@ -61,38 +51,15 @@
       font-weight: 800;
     }
 
-    .goal {
-      margin-top: 6px;
-      color: var(--muted);
-      font-size: 15px;
-    }
+    .goal { color: var(--muted); }
 
-    .camel-wrap {
-      position: relative;
-      margin: 30px 0 16px;
-    }
+    .camel-wrap { margin: 30px 0 16px; position: relative; }
+    .camel { width: 260px; }
 
-    .camel {
-      width: 260px;
-    }
+    .message { color: var(--muted); font-size: 14px; }
 
-    .message {
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .slider-wrap {
-      margin-top: 28px;
-    }
-
-    input[type="range"] {
-      width: 100%;
-    }
-
-    .slider-value {
-      margin-top: 8px;
-      font-weight: 600;
-    }
+    .slider-wrap { margin-top: 28px; }
+    input[type="range"] { width: 100%; }
 
     button {
       margin-top: 18px;
@@ -107,174 +74,153 @@
       cursor: pointer;
     }
 
-    footer {
-      margin-top: 28px;
-      font-size: 12px;
-      color: var(--muted);
-    }
+    footer { margin-top: 28px; font-size: 12px; color: var(--muted); }
 
-    /* Floating +ml */
     .float {
       position: absolute;
       left: 50%;
       top: 0;
       transform: translateX(-50%);
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--accent);
       animation: floatUp 1s ease forwards;
-      pointer-events: none;
+      font-weight: 700;
     }
 
-    /* Heart pop */
     .heart {
       position: absolute;
       right: 20%;
       top: 20%;
-      font-size: 28px;
       animation: heartPop 1s ease forwards;
-      pointer-events: none;
     }
 
-    /* Confetti */
     .confetti {
       position: fixed;
       top: -10px;
       width: 8px;
       height: 14px;
-      opacity: 0.9;
       animation: confettiFall linear forwards;
       z-index: 1;
     }
 
     @keyframes floatUp {
-      from { opacity: 0; transform: translate(-50%, 10px); }
-      20% { opacity: 1; }
       to { opacity: 0; transform: translate(-50%, -40px); }
     }
 
     @keyframes heartPop {
-      from { opacity: 0; transform: scale(0.5) translateY(10px); }
-      30% { opacity: 1; transform: scale(1.2) translateY(0); }
-      to { opacity: 0; transform: scale(0.8) translateY(-30px); }
+      to { opacity: 0; transform: translateY(-30px) scale(0.8); }
     }
 
     @keyframes confettiFall {
-      to {
-        transform: translateY(110vh) rotate(720deg);
-        opacity: 0;
-      }
+      to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
     }
   </style>
 </head>
 
 <body>
-  <div class="app">
-    <h1>HydroCamel</h1>
-    <div class="subtitle">Smart hydration intelligence</div>
+<div class="app">
+  <h1>HydroCamel</h1>
+  <div class="subtitle">Smart hydration intelligence</div>
 
-    <div class="amount" id="total">0 ml</div>
-    <div class="goal">of 2500 ml</div>
+  <div class="amount" id="total">0 ml</div>
+  <div class="goal">of 2500 ml</div>
 
-    <div class="camel-wrap" id="camelWrap">
-      <img id="camel" class="camel" src="camel-normal.png" alt="Camel" />
-    </div>
-
-    <div class="message" id="message">Start hydrating 💧</div>
-
-    <div class="slider-wrap">
-      <input type="range" min="100" max="500" step="50" id="slider" />
-      <div class="slider-value"><span id="sliderValue"></span> ml</div>
-    </div>
-
-    <button onclick="addWater()">Add water</button>
-    <footer>Calm · Private · Offline-friendly</footer>
+  <div class="camel-wrap" id="camelWrap">
+    <img id="camel" class="camel" src="camel-normal.png">
   </div>
 
-  <script>
-    const GOAL = 2500;
+  <div class="message" id="message">Start hydrating 💧</div>
 
-    const camel = document.getElementById("camel");
-    const camelWrap = document.getElementById("camelWrap");
-    const totalEl = document.getElementById("total");
-    const slider = document.getElementById("slider");
-    const sliderValue = document.getElementById("sliderValue");
-    const message = document.getElementById("message");
+  <div class="slider-wrap">
+    <input type="range" min="100" max="500" step="50" id="slider">
+    <div><span id="sliderValue"></span> ml</div>
+  </div>
 
-    let total = Number(localStorage.getItem("hydrocamel-total")) || 0;
-    let savedSlider = Number(localStorage.getItem("hydrocamel-slider")) || 300;
-    let confettiShown = localStorage.getItem("hydrocamel-confetti") === "true";
+  <button onclick="addWater()">Add water</button>
+  <footer>Calm · Private · Offline-friendly</footer>
+</div>
 
-    totalEl.textContent = `${total} ml`;
-    slider.value = savedSlider;
-    sliderValue.textContent = savedSlider;
+<script>
+const GOAL = 2500;
+const camel = document.getElementById("camel");
+const camelWrap = document.getElementById("camelWrap");
+const totalEl = document.getElementById("total");
+const slider = document.getElementById("slider");
+const sliderValue = document.getElementById("sliderValue");
+const message = document.getElementById("message");
 
-    slider.addEventListener("input", () => {
-      sliderValue.textContent = slider.value;
-      localStorage.setItem("hydrocamel-slider", slider.value);
-    });
+let total = Number(localStorage.getItem("hydrocamel-total")) || 0;
+let goalReached = total >= GOAL;
+let confettiShown = localStorage.getItem("hydrocamel-confetti") === "true";
 
-    function react(src, duration = 700) {
-      camel.src = src;
-      setTimeout(() => camel.src = "camel-normal.png", duration);
-    }
+totalEl.textContent = `${total} ml`;
+slider.value = localStorage.getItem("hydrocamel-slider") || 300;
+sliderValue.textContent = slider.value;
 
-    function floatAmount(amount) {
-      const el = document.createElement("div");
-      el.className = "float";
-      el.textContent = `+${amount} ml`;
-      camelWrap.appendChild(el);
-      setTimeout(() => el.remove(), 1000);
-    }
+slider.oninput = () => {
+  sliderValue.textContent = slider.value;
+  localStorage.setItem("hydrocamel-slider", slider.value);
+};
 
-    function popHeart() {
-      const heart = document.createElement("div");
-      heart.className = "heart";
-      heart.textContent = "❤️";
-      camelWrap.appendChild(heart);
-      setTimeout(() => heart.remove(), 1000);
-    }
+function react(src, duration = 700) {
+  camel.src = src;
+  setTimeout(() => camel.src = "camel-normal.png", duration);
+}
 
-    function launchConfetti() {
-      if (confettiShown) return;
-      confettiShown = true;
-      localStorage.setItem("hydrocamel-confetti", "true");
+function floatAmount(amount) {
+  const el = document.createElement("div");
+  el.className = "float";
+  el.textContent = `+${amount} ml`;
+  camelWrap.appendChild(el);
+  setTimeout(() => el.remove(), 1000);
+}
 
-      for (let i = 0; i < 80; i++) {
-        const c = document.createElement("div");
-        c.className = "confetti";
-        c.style.left = Math.random() * 100 + "vw";
-        c.style.backgroundColor =
-          ["#2bb0ed", "#ff4d6d", "#22c55e", "#facc15"][Math.floor(Math.random() * 4)];
-        c.style.animationDuration = 2 + Math.random() * 2 + "s";
-        document.body.appendChild(c);
-        setTimeout(() => c.remove(), 4000);
-      }
-    }
+function popHeart() {
+  const h = document.createElement("div");
+  h.className = "heart";
+  h.textContent = "❤️";
+  camelWrap.appendChild(h);
+  setTimeout(() => h.remove(), 1000);
+}
 
-    function addWater() {
-      const amount = Number(slider.value);
-      total = Math.min(GOAL, total + amount);
-      totalEl.textContent = `${total} ml`;
-      localStorage.setItem("hydrocamel-total", total);
+function launchConfetti() {
+  if (confettiShown) return;
+  confettiShown = true;
+  localStorage.setItem("hydrocamel-confetti", "true");
 
-      floatAmount(amount);
+  for (let i = 0; i < 80; i++) {
+    const c = document.createElement("div");
+    c.className = "confetti";
+    c.style.left = Math.random() * 100 + "vw";
+    c.style.background = ["#2bb0ed","#ff4d6d","#22c55e","#facc15"][i%4];
+    c.style.animationDuration = 2 + Math.random() * 2 + "s";
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 4000);
+  }
+}
 
-      if (amount >= 500) {
-        react("camel-kiss.png", 900);
-        popHeart();
-        message.textContent = "Camel loves you 😘";
-      } else {
-        react("camel-blink.png", 500);
-        message.textContent = "Nice sip!";
-      }
+function addWater() {
+  const amount = Number(slider.value);
+  total = Math.min(GOAL, total + amount);
+  totalEl.textContent = `${total} ml`;
+  localStorage.setItem("hydrocamel-total", total);
 
-      if (total >= GOAL) {
-        camel.src = "camel-wink.png";
-        message.textContent = "Goal achieved 🎉";
-        launchConfetti();
-      }
-    }
-  </script>
+  floatAmount(amount);
+
+  if (amount >= 500) {
+    react("camel-kiss.png", 900);
+    popHeart();
+    message.textContent = "Camel loves you 😘";
+  } else {
+    react("camel-blink.png", 500);
+    message.textContent = "Nice sip!";
+  }
+
+  if (total >= GOAL && !goalReached) {
+    goalReached = true;
+    camel.src = "camel-wink.png";
+    message.textContent = "Goal achieved 🎉";
+    launchConfetti();
+  }
+}
+</script>
 </body>
 </html>
