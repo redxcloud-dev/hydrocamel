@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <title>HydroCamel</title>
 
   <!-- App Icon -->
@@ -32,6 +31,7 @@
       justify-content: center;
       align-items: center;
       color: var(--text);
+      overflow: hidden;
     }
 
     .app {
@@ -40,6 +40,7 @@
       padding: 32px 24px 40px;
       text-align: center;
       position: relative;
+      z-index: 2;
     }
 
     h1 {
@@ -131,37 +132,37 @@
       right: 20%;
       top: 20%;
       font-size: 28px;
-      color: var(--heart);
       animation: heartPop 1s ease forwards;
       pointer-events: none;
     }
 
+    /* Confetti */
+    .confetti {
+      position: fixed;
+      top: -10px;
+      width: 8px;
+      height: 14px;
+      opacity: 0.9;
+      animation: confettiFall linear forwards;
+      z-index: 1;
+    }
+
     @keyframes floatUp {
-      from {
-        opacity: 0;
-        transform: translate(-50%, 10px);
-      }
-      20% {
-        opacity: 1;
-      }
-      to {
-        opacity: 0;
-        transform: translate(-50%, -40px);
-      }
+      from { opacity: 0; transform: translate(-50%, 10px); }
+      20% { opacity: 1; }
+      to { opacity: 0; transform: translate(-50%, -40px); }
     }
 
     @keyframes heartPop {
-      from {
-        opacity: 0;
-        transform: scale(0.5) translateY(10px);
-      }
-      30% {
-        opacity: 1;
-        transform: scale(1.2) translateY(0);
-      }
+      from { opacity: 0; transform: scale(0.5) translateY(10px); }
+      30% { opacity: 1; transform: scale(1.2) translateY(0); }
+      to { opacity: 0; transform: scale(0.8) translateY(-30px); }
+    }
+
+    @keyframes confettiFall {
       to {
+        transform: translateY(110vh) rotate(720deg);
         opacity: 0;
-        transform: scale(0.8) translateY(-30px);
       }
     }
   </style>
@@ -183,13 +184,10 @@
 
     <div class="slider-wrap">
       <input type="range" min="100" max="500" step="50" id="slider" />
-      <div class="slider-value">
-        <span id="sliderValue"></span> ml
-      </div>
+      <div class="slider-value"><span id="sliderValue"></span> ml</div>
     </div>
 
     <button onclick="addWater()">Add water</button>
-
     <footer>Calm · Private · Offline-friendly</footer>
   </div>
 
@@ -205,6 +203,7 @@
 
     let total = Number(localStorage.getItem("hydrocamel-total")) || 0;
     let savedSlider = Number(localStorage.getItem("hydrocamel-slider")) || 300;
+    let confettiShown = localStorage.getItem("hydrocamel-confetti") === "true";
 
     totalEl.textContent = `${total} ml`;
     slider.value = savedSlider;
@@ -217,9 +216,7 @@
 
     function react(src, duration = 700) {
       camel.src = src;
-      setTimeout(() => {
-        camel.src = "camel-normal.png";
-      }, duration);
+      setTimeout(() => camel.src = "camel-normal.png", duration);
     }
 
     function floatAmount(amount) {
@@ -236,6 +233,23 @@
       heart.textContent = "❤️";
       camelWrap.appendChild(heart);
       setTimeout(() => heart.remove(), 1000);
+    }
+
+    function launchConfetti() {
+      if (confettiShown) return;
+      confettiShown = true;
+      localStorage.setItem("hydrocamel-confetti", "true");
+
+      for (let i = 0; i < 80; i++) {
+        const c = document.createElement("div");
+        c.className = "confetti";
+        c.style.left = Math.random() * 100 + "vw";
+        c.style.backgroundColor =
+          ["#2bb0ed", "#ff4d6d", "#22c55e", "#facc15"][Math.floor(Math.random() * 4)];
+        c.style.animationDuration = 2 + Math.random() * 2 + "s";
+        document.body.appendChild(c);
+        setTimeout(() => c.remove(), 4000);
+      }
     }
 
     function addWater() {
@@ -258,6 +272,7 @@
       if (total >= GOAL) {
         camel.src = "camel-wink.png";
         message.textContent = "Goal achieved 🎉";
+        launchConfetti();
       }
     }
   </script>
