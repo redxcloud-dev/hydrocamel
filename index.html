@@ -1,196 +1,197 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HydroCamel</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HydroCamel</title>
 
-  <!-- App Icons -->
-  <link rel="icon" href="icon-512.png" sizes="512x512">
-  <link rel="apple-touch-icon" href="icon-512.png">
+<link rel="icon" href="icon-512.png" sizes="512x512">
+<link rel="apple-touch-icon" href="icon-512.png">
 
-  <style>
-    :root {
-      --bg: #f7f9fb;
-      --text: #1f2937;
-      --muted: #6b7280;
-      --accent: #2bb0ed;
-      --heart: #ff4d6d;
-    }
+<style>
+:root {
+  --bg: #f7f9fb;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --accent: #2bb0ed;
+}
 
-    * {
-      box-sizing: border-box;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    }
+* {
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: var(--bg);
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      color: var(--text);
-      overflow-x: hidden;
-    }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+}
 
-    /* Settings icon */
-    .settings-btn {
-      position: fixed;
-      top: 18px;
-      right: 18px;
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      border: none;
-      background: white;
-      font-size: 20px;
-      cursor: pointer;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.12);
-      z-index: 20;
-    }
+/* ---------- GLOBAL ---------- */
 
-    .app {
-      width: 100%;
-      max-width: 420px;
-      padding: 24px 20px 32px;
-      text-align: center;
-      position: relative;
-    }
+.screen {
+  min-height: 100vh;
+  padding: 24px 20px 32px;
+}
 
-    h1 {
-      margin: 0;
-      font-size: 28px;
-      font-weight: 700;
-    }
+.hidden {
+  display: none;
+}
 
-    .subtitle {
-      margin-top: 4px;
-      color: var(--muted);
-      font-size: 14px;
-    }
+button {
+  cursor: pointer;
+}
 
-    .amount {
-      margin-top: 24px;
-      font-size: 42px;
-      font-weight: 800;
-    }
+/* ---------- SETTINGS ICON ---------- */
 
-    .goal {
-      margin-top: 6px;
-      color: var(--muted);
-      font-size: 15px;
-    }
+.settings-btn {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: white;
+  font-size: 20px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+  z-index: 20;
+}
 
-    .camel-wrap {
-      position: relative;
-      margin: 24px 0 12px;
-    }
+/* ---------- MAIN SCREEN ---------- */
 
-    .camel {
-      width: 220px;
-      max-width: 70vw;
-      height: auto;
-    }
+.app {
+  max-width: 420px;
+  margin: 0 auto;
+  text-align: center;
+}
 
-    .message {
-      color: var(--muted);
-      font-size: 14px;
-      margin-top: 4px;
-    }
+h1 {
+  margin: 0;
+  font-size: 28px;
+}
 
-    .slider-wrap {
-      margin-top: 28px;
-    }
+.subtitle {
+  font-size: 14px;
+  color: var(--muted);
+  margin-top: 4px;
+}
 
-    input[type="range"] {
-      width: 100%;
-    }
+.amount {
+  margin-top: 24px;
+  font-size: 42px;
+  font-weight: 800;
+}
 
-    .slider-value {
-      margin-top: 8px;
-      font-weight: 600;
-    }
+.goal {
+  font-size: 15px;
+  color: var(--muted);
+}
 
-    button.main-btn {
-      margin-top: 18px;
-      width: 100%;
-      padding: 14px;
-      font-size: 16px;
-      border-radius: 14px;
-      border: none;
-      background: var(--accent);
-      color: white;
-      font-weight: 600;
-      cursor: pointer;
-    }
+.camel-wrap {
+  margin: 24px 0 12px;
+  position: relative;
+}
 
-    footer {
-      margin-top: 28px;
-      font-size: 12px;
-      color: var(--muted);
-    }
+.camel {
+  width: 220px;
+  max-width: 70vw;
+}
 
-    /* Floating +ml */
-    .float {
-      position: absolute;
-      left: 50%;
-      top: 0;
-      transform: translateX(-50%);
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--accent);
-      animation: floatUp 1s ease forwards;
-      pointer-events: none;
-    }
+.message {
+  font-size: 14px;
+  color: var(--muted);
+}
 
-    /* Heart */
-    .heart {
-      position: absolute;
-      right: 20%;
-      top: 20%;
-      font-size: 28px;
-      animation: heartPop 1s ease forwards;
-      pointer-events: none;
-    }
+.slider-wrap {
+  margin-top: 28px;
+}
 
-    /* Confetti */
-    .confetti {
-      position: fixed;
-      top: -10px;
-      width: 8px;
-      height: 14px;
-      opacity: 0.9;
-      animation: confettiFall linear forwards;
-      z-index: 1;
-    }
+input[type="range"] {
+  width: 100%;
+}
 
-    @keyframes floatUp {
-      from { opacity: 0; transform: translate(-50%, 10px); }
-      20% { opacity: 1; }
-      to { opacity: 0; transform: translate(-50%, -40px); }
-    }
+.slider-value {
+  margin-top: 8px;
+  font-weight: 600;
+}
 
-    @keyframes heartPop {
-      from { opacity: 0; transform: scale(0.5) translateY(10px); }
-      30% { opacity: 1; transform: scale(1.2); }
-      to { opacity: 0; transform: scale(0.8) translateY(-30px); }
-    }
+.main-btn {
+  margin-top: 18px;
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  border: none;
+  background: var(--accent);
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+}
 
-    @keyframes confettiFall {
-      to {
-        transform: translateY(110vh) rotate(720deg);
-        opacity: 0;
-      }
-    }
-  </style>
+/* ---------- SETTINGS SCREEN ---------- */
+
+.settings-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.back-btn {
+  border: none;
+  background: none;
+  font-size: 22px;
+}
+
+.settings-title {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.settings-list {
+  margin-top: 24px;
+}
+
+.setting-item {
+  background: white;
+  padding: 16px;
+  border-radius: 14px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.setting-item span {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+/* ---------- FLOAT / HEART / CONFETTI ---------- */
+
+.float {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-weight: 700;
+  color: var(--accent);
+  animation: floatUp 1s forwards;
+}
+
+@keyframes floatUp {
+  from { opacity: 0; transform: translate(-50%, 10px); }
+  to { opacity: 0; transform: translate(-50%, -40px); }
+}
+</style>
 </head>
 
 <body>
 
-  <!-- Settings Button -->
-  <button class="settings-btn" onclick="openSettings()">⚙️</button>
+<!-- SETTINGS BUTTON -->
+<button class="settings-btn" onclick="openSettings()">⚙️</button>
 
+<!-- MAIN SCREEN -->
+<div id="mainScreen" class="screen">
   <div class="app">
     <h1>HydroCamel</h1>
     <div class="subtitle">Smart hydration intelligence</div>
@@ -199,115 +200,76 @@
     <div class="goal">of 2500 ml</div>
 
     <div class="camel-wrap" id="camelWrap">
-      <img id="camel" class="camel" src="camel-normal.png" alt="Camel" />
+      <img id="camel" class="camel" src="camel-normal.png">
     </div>
 
     <div class="message" id="message">Start hydrating 💧</div>
 
     <div class="slider-wrap">
-      <input type="range" min="100" max="500" step="50" id="slider" />
+      <input type="range" min="100" max="500" step="50" id="slider">
       <div class="slider-value"><span id="sliderValue"></span> ml</div>
     </div>
 
     <button class="main-btn" onclick="addWater()">Add water</button>
+  </div>
+</div>
 
-    <footer>Calm · Private · Offline-friendly</footer>
+<!-- SETTINGS SCREEN -->
+<div id="settingsScreen" class="screen hidden">
+  <div class="settings-header">
+    <button class="back-btn" onclick="closeSettings()">←</button>
+    <div class="settings-title">Settings</div>
   </div>
 
-  <script>
-    const GOAL = 2500;
+  <div class="settings-list">
+    <div class="setting-item">
+      <div>Daily Goal</div>
+      <span>2500 ml</span>
+    </div>
 
-    const camel = document.getElementById("camel");
-    const camelWrap = document.getElementById("camelWrap");
-    const totalEl = document.getElementById("total");
-    const slider = document.getElementById("slider");
-    const sliderValue = document.getElementById("sliderValue");
-    const message = document.getElementById("message");
+    <div class="setting-item">
+      <div>Daily Reset Time</div>
+      <span>03:00 AM</span>
+    </div>
+  </div>
+</div>
 
-    let total = Number(localStorage.getItem("hydrocamel-total")) || 0;
-    let savedSlider = Number(localStorage.getItem("hydrocamel-slider")) || 300;
-    let confettiShown = localStorage.getItem("hydrocamel-confetti") === "true";
+<script>
+const GOAL = 2500;
+let total = Number(localStorage.getItem("hydrocamel-total")) || 0;
 
-    totalEl.textContent = `${total} ml`;
-    slider.value = savedSlider;
-    sliderValue.textContent = savedSlider;
+const totalEl = document.getElementById("total");
+const slider = document.getElementById("slider");
+const sliderValue = document.getElementById("sliderValue");
+const camel = document.getElementById("camel");
+const message = document.getElementById("message");
 
-    slider.addEventListener("input", () => {
-      sliderValue.textContent = slider.value;
-      localStorage.setItem("hydrocamel-slider", slider.value);
-    });
+slider.value = 300;
+sliderValue.textContent = 300;
+totalEl.textContent = total + " ml";
 
-    function react(src, duration = 700) {
-      camel.src = src;
-      setTimeout(() => camel.src = "camel-normal.png", duration);
-    }
+slider.oninput = () => sliderValue.textContent = slider.value;
 
-    function floatAmount(amount) {
-      const el = document.createElement("div");
-      el.className = "float";
-      el.textContent = `+${amount} ml`;
-      camelWrap.appendChild(el);
-      setTimeout(() => el.remove(), 1000);
-    }
+function addWater() {
+  const amount = Number(slider.value);
+  total = Math.min(GOAL, total + amount);
+  localStorage.setItem("hydrocamel-total", total);
+  totalEl.textContent = total + " ml";
 
-    function popHeart() {
-      const heart = document.createElement("div");
-      heart.className = "heart";
-      heart.textContent = "❤️";
-      camelWrap.appendChild(heart);
-      setTimeout(() => heart.remove(), 1000);
-    }
+  camel.src = "camel-blink.png";
+  setTimeout(() => camel.src = "camel-normal.png", 500);
+}
 
-    function launchConfetti() {
-      if (confettiShown) return;
-      confettiShown = true;
-      localStorage.setItem("hydrocamel-confetti", "true");
+function openSettings() {
+  document.getElementById("mainScreen").classList.add("hidden");
+  document.getElementById("settingsScreen").classList.remove("hidden");
+}
 
-      for (let i = 0; i < 80; i++) {
-        const c = document.createElement("div");
-        c.className = "confetti";
-        c.style.left = Math.random() * 100 + "vw";
-        c.style.backgroundColor =
-          ["#2bb0ed", "#ff4d6d", "#22c55e", "#facc15"][Math.floor(Math.random() * 4)];
-        c.style.animationDuration = 2 + Math.random() * 2 + "s";
-        document.body.appendChild(c);
-        setTimeout(() => c.remove(), 4000);
-      }
-    }
-
-    function addWater() {
-      const amount = Number(slider.value);
-      const prevTotal = total;
-
-      total = Math.min(GOAL, total + amount);
-      totalEl.textContent = `${total} ml`;
-      localStorage.setItem("hydrocamel-total", total);
-
-      floatAmount(amount);
-
-      const prevMilestone = Math.floor(prevTotal / 500);
-      const newMilestone = Math.floor(total / 500);
-
-      if (newMilestone > prevMilestone) {
-        react("camel-kiss.png", 900);
-        popHeart();
-        message.textContent = "500 ml achieved 💖";
-      } else {
-        react("camel-blink.png", 500);
-        message.textContent = "Nice sip!";
-      }
-
-      if (total >= GOAL) {
-        camel.src = "camel-wink.png";
-        message.textContent = "Goal achieved 🎉";
-        launchConfetti();
-      }
-    }
-
-    function openSettings() {
-      alert("Settings screen coming next");
-    }
-  </script>
+function closeSettings() {
+  document.getElementById("settingsScreen").classList.add("hidden");
+  document.getElementById("mainScreen").classList.remove("hidden");
+}
+</script>
 
 </body>
 </html>
