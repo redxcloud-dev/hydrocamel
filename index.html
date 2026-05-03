@@ -9,32 +9,158 @@
 <link rel="apple-touch-icon" href="icon-512.png">
 
 <style>
-/* --- SAME STYLES AS BEFORE (unchanged) --- */
 :root {
-  --bg:#f7f9fb;--text:#1f2937;--muted:#6b7280;--accent:#2bb0ed;
+  --bg:#f7f9fb;
+  --text:#1f2937;
+  --muted:#6b7280;
+  --accent:#2bb0ed;
 }
-*{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
-body{margin:0;min-height:100vh;background:var(--bg);color:var(--text)}
-.screen{min-height:100vh;padding:24px 20px 32px}
-.hidden{display:none}
-.settings-btn{position:fixed;top:18px;right:18px;width:44px;height:44px;border-radius:50%;border:none;background:white;font-size:20px;box-shadow:0 6px 16px rgba(0,0,0,.12);z-index:20}
-.app{max-width:420px;margin:0 auto;text-align:center}
-h1{margin:0;font-size:28px}
-.subtitle{font-size:14px;color:var(--muted);margin-top:4px}
-.amount{margin-top:24px;font-size:42px;font-weight:800}
-.goal{font-size:15px;color:var(--muted)}
-.camel{width:220px;max-width:70vw;margin:24px 0 12px}
-.slider-wrap{margin-top:28px}
-input[type=range]{width:100%}
-.main-btn{margin-top:18px;width:100%;padding:14px;border-radius:14px;border:none;background:var(--accent);color:white;font-size:16px;font-weight:600}
-.settings-header{display:flex;align-items:center;gap:12px}
-.back-btn{border:none;background:none;font-size:22px}
-.settings-title{font-size:20px;font-weight:700}
-.settings-list{margin-top:24px}
-.setting-item{background:white;padding:16px;border-radius:14px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
-.setting-item span{color:var(--muted);font-size:14px}
-.time-picker{margin-top:40px}
-.time-picker input{width:100%;padding:14px;font-size:18px;border-radius:12px;border:1px solid #ddd}
+
+* {
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.screen {
+  min-height: 100vh;
+  padding: 24px 20px 32px;
+}
+
+.hidden { display: none; }
+
+/* ---------- SETTINGS ICON ---------- */
+.settings-btn {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: white;
+  font-size: 20px;
+  box-shadow: 0 6px 16px rgba(0,0,0,.12);
+  z-index: 20;
+}
+
+/* ---------- MAIN ---------- */
+.app {
+  max-width: 420px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+h1 { margin: 0; font-size: 28px; }
+.subtitle { font-size: 14px; color: var(--muted); }
+
+.amount {
+  margin-top: 24px;
+  font-size: 42px;
+  font-weight: 800;
+}
+
+.goal { font-size: 15px; color: var(--muted); }
+
+.camel-wrap {
+  position: relative;
+  margin: 24px 0 12px;
+}
+
+.camel {
+  width: 220px;
+  max-width: 70vw;
+}
+
+.message {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.slider-wrap { margin-top: 28px; }
+input[type=range] { width: 100%; }
+.slider-value { margin-top: 8px; font-weight: 600; }
+
+.main-btn {
+  margin-top: 18px;
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  border: none;
+  background: var(--accent);
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* ---------- SETTINGS ---------- */
+.settings-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.back-btn {
+  border: none;
+  background: none;
+  font-size: 22px;
+}
+
+.settings-title {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.settings-list { margin-top: 24px; }
+
+.setting-item {
+  background: white;
+  padding: 16px;
+  border-radius: 14px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.setting-item span {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+/* ---------- EFFECTS ---------- */
+.float {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-weight: 700;
+  color: var(--accent);
+  animation: floatUp 1s forwards;
+}
+
+.heart {
+  position: absolute;
+  right: 20%;
+  top: 10%;
+  font-size: 26px;
+  animation: heartPop 1s forwards;
+}
+
+@keyframes floatUp {
+  from { opacity: 0; transform: translate(-50%, 10px); }
+  to { opacity: 0; transform: translate(-50%, -40px); }
+}
+
+@keyframes heartPop {
+  from { opacity: 0; transform: scale(.6); }
+  to { opacity: 0; transform: scale(1.4); }
+}
 </style>
 </head>
 
@@ -47,12 +173,21 @@ input[type=range]{width:100%}
   <div class="app">
     <h1>HydroCamel</h1>
     <div class="subtitle">Smart hydration intelligence</div>
+
     <div class="amount" id="total">0 ml</div>
     <div class="goal">of 2500 ml</div>
-    <img class="camel" src="camel-normal.png">
-    <div class="slider-wrap">
-      <input type="range" min="100" max="500" step="50" id="slider" value="300">
+
+    <div class="camel-wrap" id="camelWrap">
+      <img id="camel" class="camel" src="camel-normal.png">
     </div>
+
+    <div class="message" id="message">Start hydrating 💧</div>
+
+    <div class="slider-wrap">
+      <input type="range" min="100" max="500" step="50" id="slider">
+      <div class="slider-value"><span id="sliderValue"></span> ml</div>
+    </div>
+
     <button class="main-btn" onclick="addWater()">Add water</button>
   </div>
 </div>
@@ -78,62 +213,113 @@ input[type=range]{width:100%}
     <button class="back-btn" onclick="closeResetTime()">←</button>
     <div class="settings-title">Daily Reset Time</div>
   </div>
-  <div class="time-picker">
-    <input type="time" id="resetInput">
-  </div>
+  <input type="time" id="resetInput" style="margin-top:40px;width:100%;padding:14px;font-size:18px;">
 </div>
 
 <script>
-/* ---------- HYDRATION ---------- */
+/* ---------- CONSTANTS ---------- */
 const GOAL = 2500;
 const totalKey = "hydrocamel-total";
-let total = Number(localStorage.getItem(totalKey)) || 0;
-const totalEl = document.getElementById("total");
-
-function addWater() {
-  total = Math.min(GOAL, total + 300);
-  localStorage.setItem(totalKey, total);
-  totalEl.textContent = total + " ml";
-}
-totalEl.textContent = total + " ml";
-
-/* ---------- RESET TIME ---------- */
 const resetKey = "hydrocamel-reset-time";
 const lastResetKey = "hydrocamel-last-reset";
 
-let resetTime = localStorage.getItem(resetKey) || "03:00";
+/* ---------- ELEMENTS ---------- */
+const camel = document.getElementById("camel");
+const camelWrap = document.getElementById("camelWrap");
+const message = document.getElementById("message");
+const totalEl = document.getElementById("total");
+const slider = document.getElementById("slider");
+const sliderValue = document.getElementById("sliderValue");
 const resetLabel = document.getElementById("resetLabel");
 const resetInput = document.getElementById("resetInput");
 
+/* ---------- STATE ---------- */
+let total = Number(localStorage.getItem(totalKey)) || 0;
+let resetTime = localStorage.getItem(resetKey) || "03:00";
+
+/* ---------- INIT ---------- */
+slider.value = 300;
+sliderValue.textContent = 300;
+totalEl.textContent = total + " ml";
 resetLabel.textContent = formatTime(resetTime);
 resetInput.value = resetTime;
 
-resetInput.onchange = () => {
-  resetTime = resetInput.value;
-  localStorage.setItem(resetKey, resetTime);
-  resetLabel.textContent = formatTime(resetTime);
-};
+/* ---------- SLIDER ---------- */
+slider.oninput = () => sliderValue.textContent = slider.value;
 
-/* ---------- AUTO RESET LOGIC ---------- */
-function checkDailyReset() {
-  const now = new Date();
-  const today = now.toISOString().split("T")[0];
-  const lastReset = localStorage.getItem(lastResetKey);
+/* ---------- REACTIONS ---------- */
+function react(src, duration=700){
+  camel.src = src;
+  setTimeout(()=>camel.src="camel-normal.png", duration);
+}
 
-  const [h, m] = resetTime.split(":");
-  const resetDate = new Date();
-  resetDate.setHours(h, m, 0, 0);
+function floatAmount(amount){
+  const el=document.createElement("div");
+  el.className="float";
+  el.textContent=`+${amount} ml`;
+  camelWrap.appendChild(el);
+  setTimeout(()=>el.remove(),1000);
+}
 
-  if (now >= resetDate && lastReset !== today) {
-    total = 0;
-    localStorage.setItem(totalKey, 0);
-    localStorage.setItem(lastResetKey, today);
-    totalEl.textContent = "0 ml";
+function popHeart(){
+  const h=document.createElement("div");
+  h.className="heart";
+  h.textContent="❤️";
+  camelWrap.appendChild(h);
+  setTimeout(()=>h.remove(),1000);
+}
+
+/* ---------- ADD WATER ---------- */
+function addWater(){
+  const amount = Number(slider.value);
+  const prev = total;
+  total = Math.min(GOAL, total + amount);
+  localStorage.setItem(totalKey, total);
+  totalEl.textContent = total + " ml";
+
+  floatAmount(amount);
+
+  if (Math.floor(prev/500) < Math.floor(total/500) && total < GOAL){
+    react("camel-kiss.png",900);
+    popHeart();
+    message.textContent="Great progress 😘";
+  } else if (total >= GOAL){
+    camel.src="camel-wink.png";
+    message.textContent="Goal achieved 🎉";
+  } else {
+    react("camel-blink.png",500);
+    message.textContent="Nice sip 💧";
+  }
+}
+
+/* ---------- DAILY RESET ---------- */
+function checkDailyReset(){
+  const now=new Date();
+  const today=now.toISOString().split("T")[0];
+  const last=localStorage.getItem(lastResetKey);
+
+  const [h,m]=resetTime.split(":");
+  const reset=new Date();
+  reset.setHours(h,m,0,0);
+
+  if(now>=reset && last!==today){
+    total=0;
+    localStorage.setItem(totalKey,0);
+    localStorage.setItem(lastResetKey,today);
+    totalEl.textContent="0 ml";
+    message.textContent="New day, stay hydrated 💧";
   }
 }
 
 checkDailyReset();
-setInterval(checkDailyReset, 60 * 1000);
+setInterval(checkDailyReset,60000);
+
+/* ---------- RESET TIME ---------- */
+resetInput.onchange=()=>{
+  resetTime=resetInput.value;
+  localStorage.setItem(resetKey,resetTime);
+  resetLabel.textContent=formatTime(resetTime);
+};
 
 /* ---------- NAV ---------- */
 function openSettings(){mainScreen.classList.add("hidden");settingsScreen.classList.remove("hidden")}
@@ -142,7 +328,9 @@ function openResetTime(){settingsScreen.classList.add("hidden");resetScreen.clas
 function closeResetTime(){resetScreen.classList.add("hidden");settingsScreen.classList.remove("hidden")}
 
 function formatTime(t){
-  const[h,m]=t.split(":");const hr=((h%12)||12);const ampm=h>=12?"PM":"AM";
+  const[h,m]=t.split(":");
+  const hr=((h%12)||12);
+  const ampm=h>=12?"PM":"AM";
   return `${hr}:${m} ${ampm}`;
 }
 </script>
