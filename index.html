@@ -6,7 +6,7 @@
 
   <title>HydroCamel</title>
 
-  <!-- ICONS (this brings icon-512.png BACK) -->
+  <!-- App Icon -->
   <link rel="icon" href="icon-512.png" sizes="512x512">
   <link rel="apple-touch-icon" href="icon-512.png">
 
@@ -64,18 +64,12 @@
       font-size: 15px;
     }
 
-    .camel-wrap {
-      margin: 30px 0 16px;
-    }
-
     .camel {
       width: 260px;
-      height: auto;
-      transition: transform 0.2s ease;
+      margin: 30px auto 16px;
     }
 
     .message {
-      margin-top: 6px;
       color: var(--muted);
       font-size: 14px;
     }
@@ -122,14 +116,7 @@
     <div class="amount" id="total">0 ml</div>
     <div class="goal">of 2500 ml</div>
 
-    <div class="camel-wrap">
-      <img
-        id="camel"
-        class="camel"
-        src="camel-normal.png"
-        alt="Camel"
-      />
-    </div>
+    <img id="camel" class="camel" src="camel-normal.png" alt="Camel" />
 
     <div class="message" id="message">Start hydrating 💧</div>
 
@@ -139,11 +126,10 @@
         min="100"
         max="500"
         step="50"
-        value="300"
         id="slider"
       />
       <div class="slider-value">
-        <span id="sliderValue">300</span> ml
+        <span id="sliderValue"></span> ml
       </div>
     </div>
 
@@ -153,8 +139,7 @@
   </div>
 
   <script>
-    let total = 0;
-    const goal = 2500;
+    const GOAL = 2500;
 
     const camel = document.getElementById("camel");
     const totalEl = document.getElementById("total");
@@ -162,11 +147,20 @@
     const sliderValue = document.getElementById("sliderValue");
     const message = document.getElementById("message");
 
+    // 🔹 Load saved state
+    let total = Number(localStorage.getItem("hydrocamel-total")) || 0;
+    let savedSlider = Number(localStorage.getItem("hydrocamel-slider")) || 300;
+
+    totalEl.textContent = `${total} ml`;
+    slider.value = savedSlider;
+    sliderValue.textContent = savedSlider;
+
     slider.addEventListener("input", () => {
       sliderValue.textContent = slider.value;
+      localStorage.setItem("hydrocamel-slider", slider.value);
     });
 
-    function setCamel(src, duration = 700) {
+    function react(src, duration = 700) {
       camel.src = src;
       setTimeout(() => {
         camel.src = "camel-normal.png";
@@ -174,24 +168,23 @@
     }
 
     function addWater() {
-      const amount = parseInt(slider.value, 10);
-      total = Math.min(goal, total + amount);
-      totalEl.textContent = `${total} ml`;
+      const amount = Number(slider.value);
+      total = Math.min(GOAL, total + amount);
 
-      // Reactions
+      totalEl.textContent = `${total} ml`;
+      localStorage.setItem("hydrocamel-total", total);
+
       if (amount >= 500) {
-        setCamel("camel-kiss.png", 900);
+        react("camel-kiss.png", 900);
         message.textContent = "Camel loves you 😘";
-      } else if (total % 2 === 0) {
-        setCamel("camel-blink.png", 500);
-        message.textContent = "Nice sip!";
       } else {
-        setCamel("camel-wink.png", 600);
-        message.textContent = "Keep going 😉";
+        react("camel-blink.png", 500);
+        message.textContent = "Nice sip!";
       }
 
-      if (total >= goal) {
-        message.textContent = "Goal achieved 🎉 Amazing!";
+      if (total >= GOAL) {
+        camel.src = "camel-wink.png";
+        message.textContent = "Goal achieved 🎉";
       }
     }
   </script>
