@@ -1,323 +1,256 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HydroCamel</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>HydroCamel</title>
 
-  <link rel="icon" href="icon-512.png" sizes="512x512">
-  <link rel="apple-touch-icon" href="icon-512.png">
+<style>
+:root {
+  --blue: #2fa8e1;
+  --bg: #f7f9fb;
+  --text: #1f2933;
+}
 
-  <style>
-    :root {
-      --bg: #f7f9fb;
-      --text: #1f2937;
-      --muted: #6b7280;
-      --accent: #2bb0ed;
-      --heart: #ff4d6d;
-    }
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
 
-    * {
-      box-sizing: border-box;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  text-align: center;
+}
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: var(--bg);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: var(--text);
-      overflow: hidden;
-    }
+.container {
+  padding: 40px 20px 30px;
+}
 
-    .app {
-      width: 100%;
-      max-width: 420px;
-      padding: 32px 24px 40px;
-      text-align: center;
-      position: relative;
-      z-index: 2;
-    }
+h1 {
+  margin: 0;
+  font-size: 34px;
+  font-weight: 700;
+}
 
-    h1 {
-      margin: 0;
-      font-size: 28px;
-      font-weight: 700;
-    }
+.subtitle {
+  margin-top: 4px;
+  color: #6b7280;
+}
 
-    .subtitle {
-      margin-top: 4px;
-      color: var(--muted);
-      font-size: 14px;
-    }
+.amount {
+  margin-top: 30px;
+  font-size: 48px;
+  font-weight: 800;
+}
 
-    .amount {
-      margin-top: 28px;
-      font-size: 42px;
-      font-weight: 800;
-    }
+.goal {
+  color: #6b7280;
+}
 
-    .goal {
-      margin-top: 6px;
-      color: var(--muted);
-      font-size: 15px;
-    }
+.camel {
+  width: 260px;
+  margin: 30px auto 10px;
+}
 
-    .camel-wrap {
-      position: relative;
-      margin: 30px 0 16px;
-    }
+.hint {
+  color: #6b7280;
+  margin-bottom: 20px;
+}
 
-    .camel {
-      width: 260px;
-    }
+/* Main Glass */
+.main-glass {
+  width: 120px;
+  height: 180px;
+  border: 4px solid var(--blue);
+  border-radius: 16px;
+  margin: 0 auto 24px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
 
-    .message {
-      color: var(--muted);
-      font-size: 14px;
-    }
+.main-fill {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: var(--blue);
+  height: 0%;
+  transition: height 0.4s ease;
+}
 
-    /* GLASS BUTTON */
-    .glass-btn {
-      margin: 28px auto 0;
-      width: 120px;
-      height: 180px;
-      border: 3px solid var(--accent);
-      border-radius: 0 0 16px 16px;
-      position: relative;
-      cursor: pointer;
-    }
+.footer {
+  color: #6b7280;
+  font-size: 14px;
+}
 
-    .glass-water {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      height: 40%;
-      background: var(--accent);
-      border-radius: 0 0 12px 12px;
-    }
+/* Modal */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  display: none;
+  flex-direction: column;
+  padding: 30px 20px;
+}
 
-    .glass-plus {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 32px;
-      color: white;
-      font-weight: 700;
-      pointer-events: none;
-    }
+.modal.active {
+  display: flex;
+}
 
-    footer {
-      margin-top: 28px;
-      font-size: 12px;
-      color: var(--muted);
-    }
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-    /* FULLSCREEN INTAKE */
-    .intake-screen {
-      position: fixed;
-      inset: 0;
-      background: var(--bg);
-      z-index: 10;
-      display: none;
-      padding: 24px;
-      text-align: center;
-    }
+.modal-title {
+  font-size: 28px;
+  font-weight: 700;
+}
 
-    .intake-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+.close {
+  font-size: 28px;
+  cursor: pointer;
+}
 
-    .close {
-      font-size: 28px;
-      cursor: pointer;
-    }
+.glass-row {
+  display: flex;
+  justify-content: space-between;
+  margin: 50px 0;
+}
 
-    .preset-wrap {
-      margin-top: 40px;
-      display: flex;
-      justify-content: space-around;
-    }
+.select-glass {
+  width: 90px;
+  height: 140px;
+  border: 3px solid var(--blue);
+  border-radius: 14px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
 
-    .preset {
-      width: 80px;
-      height: 140px;
-      border: 2px solid var(--accent);
-      border-radius: 0 0 14px 14px;
-      position: relative;
-      cursor: pointer;
-    }
+.select-glass.active {
+  outline: 4px solid rgba(47,168,225,0.25);
+}
 
-    .preset-water {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      background: var(--accent);
-      border-radius: 0 0 12px 12px;
-    }
+.select-fill {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: var(--blue);
+}
 
-    .preset-label {
-      margin-top: 8px;
-      font-weight: 600;
-    }
+.select-label {
+  position: absolute;
+  top: 10px;
+  width: 100%;
+  font-weight: 700;
+}
 
-    .confirm {
-      margin-top: 40px;
-      width: 100%;
-      padding: 14px;
-      font-size: 16px;
-      border-radius: 12px;
-      border: none;
-      background: var(--accent);
-      color: white;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    /* FLOAT */
-    .float {
-      position: absolute;
-      left: 50%;
-      top: 0;
-      transform: translateX(-50%);
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--accent);
-      animation: floatUp 1s ease forwards;
-      pointer-events: none;
-    }
-
-    @keyframes floatUp {
-      from { opacity: 0; transform: translate(-50%, 10px); }
-      20% { opacity: 1; }
-      to { opacity: 0; transform: translate(-50%, -40px); }
-    }
-  </style>
+.add-btn {
+  margin-top: auto;
+  padding: 18px;
+  background: var(--blue);
+  color: white;
+  font-size: 18px;
+  border-radius: 14px;
+  cursor: pointer;
+}
+</style>
 </head>
 
 <body>
-  <div class="app">
-    <h1>HydroCamel</h1>
-    <div class="subtitle">Smart hydration intelligence</div>
 
-    <div class="amount" id="total">0 ml</div>
-    <div class="goal">of 2500 ml</div>
+<div class="container">
+  <h1>HydroCamel</h1>
+  <div class="subtitle">Smart hydration intelligence</div>
 
-    <div class="camel-wrap" id="camelWrap">
-      <img id="camel" class="camel" src="camel-normal.png" />
-    </div>
+  <div class="amount" id="current">0 ml</div>
+  <div class="goal">of 2500 ml</div>
 
-    <div class="message" id="message">Start hydrating 💧</div>
+  <img src="camel.png" class="camel" alt="camel" />
 
-    <!-- GLASS BUTTON -->
-    <div class="glass-btn" onclick="openIntake()">
-      <div class="glass-water"></div>
-      <div class="glass-plus">+</div>
-    </div>
+  <div class="hint">Start hydrating 💧</div>
 
-    <footer>Calm · Private · Offline-friendly</footer>
+  <div class="main-glass" id="openModal">
+    <div class="main-fill" id="mainFill"></div>
   </div>
 
-  <!-- FULLSCREEN INTAKE -->
-  <div class="intake-screen" id="intake">
-    <div class="intake-header">
-      <div></div>
-      <div class="close" onclick="closeIntake()">✕</div>
-    </div>
+  <div class="footer">Calm · Private · Offline-friendly</div>
+</div>
 
-    <h2>Add water</h2>
-
-    <div class="preset-wrap">
-      <div class="preset" onclick="selectAmount(250)">
-        <div class="preset-water" style="height:40%"></div>
-        <div class="preset-label">250 ml</div>
-      </div>
-
-      <div class="preset" onclick="selectAmount(350)">
-        <div class="preset-water" style="height:60%"></div>
-        <div class="preset-label">350 ml</div>
-      </div>
-
-      <div class="preset" onclick="selectAmount(500)">
-        <div class="preset-water" style="height:90%"></div>
-        <div class="preset-label">500 ml</div>
-      </div>
-    </div>
-
-    <button class="confirm" onclick="confirmAdd()">Add water</button>
+<!-- MODAL -->
+<div class="modal" id="modal">
+  <div class="modal-header">
+    <div class="modal-title">Add water</div>
+    <div class="close" id="closeModal">×</div>
   </div>
 
-  <script>
-    const GOAL = 2500;
+  <div class="glass-row">
+    <div class="select-glass" data-ml="250">
+      <div class="select-fill" style="height:50%"></div>
+      <div class="select-label">250 ml</div>
+    </div>
+    <div class="select-glass" data-ml="350">
+      <div class="select-fill" style="height:70%"></div>
+      <div class="select-label">350 ml</div>
+    </div>
+    <div class="select-glass" data-ml="500">
+      <div class="select-fill" style="height:100%"></div>
+      <div class="select-label">500 ml</div>
+    </div>
+  </div>
 
-    const camel = document.getElementById("camel");
-    const camelWrap = document.getElementById("camelWrap");
-    const totalEl = document.getElementById("total");
-    const message = document.getElementById("message");
-    const intake = document.getElementById("intake");
+  <div class="add-btn" id="addWater">Add water</div>
+</div>
 
-    let total = Number(localStorage.getItem("hydrocamel-total")) || 0;
-    let selectedAmount = 250;
-    let lastMilestone = Math.floor(total / 500);
+<script>
+const GOAL = 2500;
+let intake = Number(localStorage.getItem("intake")) || 0;
+let selected = 250;
 
-    totalEl.textContent = `${total} ml`;
+const currentEl = document.getElementById("current");
+const fillEl = document.getElementById("mainFill");
 
-    function openIntake() {
-      intake.style.display = "block";
-    }
+function updateUI() {
+  currentEl.textContent = intake + " ml";
+  fillEl.style.height = Math.min((intake / GOAL) * 100, 100) + "%";
+}
 
-    function closeIntake() {
-      intake.style.display = "none";
-    }
+updateUI();
 
-    function selectAmount(val) {
-      selectedAmount = val;
-    }
+/* Modal logic */
+const modal = document.getElementById("modal");
 
-    function react(src, duration = 700) {
-      camel.src = src;
-      setTimeout(() => camel.src = "camel-normal.png", duration);
-    }
+document.getElementById("openModal").onclick = () => {
+  modal.classList.add("active");
+};
 
-    function floatAmount(amount) {
-      const el = document.createElement("div");
-      el.className = "float";
-      el.textContent = `+${amount} ml`;
-      camelWrap.appendChild(el);
-      setTimeout(() => el.remove(), 1000);
-    }
+document.getElementById("closeModal").onclick = () => {
+  modal.classList.remove("active");
+};
 
-    function confirmAdd() {
-      closeIntake();
+document.querySelectorAll(".select-glass").forEach(g => {
+  g.onclick = () => {
+    document.querySelectorAll(".select-glass").forEach(x => x.classList.remove("active"));
+    g.classList.add("active");
+    selected = Number(g.dataset.ml);
+  };
+});
 
-      const prevTotal = total;
-      total = Math.min(GOAL, total + selectedAmount);
-      totalEl.textContent = `${total} ml`;
-      localStorage.setItem("hydrocamel-total", total);
+/* Default selection */
+document.querySelector(".select-glass[data-ml='250']").classList.add("active");
 
-      floatAmount(selectedAmount);
+document.getElementById("addWater").onclick = () => {
+  intake = Math.min(intake + selected, GOAL);
+  localStorage.setItem("intake", intake);
+  updateUI();
+  modal.classList.remove("active");
+};
+</script>
 
-      const newMilestone = Math.floor(total / 500);
-      if (newMilestone > lastMilestone) {
-        react("camel-kiss.png", 900);
-        message.textContent = "Great hydration 😘";
-        lastMilestone = newMilestone;
-      } else {
-        react("camel-blink.png", 500);
-        message.textContent = "Nice sip!";
-      }
-
-      if (total >= GOAL) {
-        camel.src = "camel-wink.png";
-        message.textContent = "Goal achieved 🎉";
-      }
-    }
-  </script>
 </body>
 </html>
