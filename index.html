@@ -27,11 +27,11 @@
     }
 
     /* Camel */
-    .camel {
-      width: 180px;
-      margin: 20px auto 10px;
-      transition: transform 0.2s ease;
-    }
+.camel {
+  width: 180px;
+  margin: 20px auto 10px;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
 
     /* Stats */
     .stats {
@@ -166,30 +166,38 @@
     goalEl.textContent = dailyGoal;
 
     /* ------------------ CAMEL REACTIONS ------------------ */
-    const CAMEL_REACTIONS = [
-      { state: "blink", duration: 600 },
-      { state: "wink", duration: 700 },
-      { state: "kiss", duration: 1000 }
-    ];
+const CAMEL_REACTIONS = [
+  { state: "blink", duration: 600 },
+  { state: "wink", duration: 750 },
+  { state: "kiss", duration: 1100 }
+];
 
-    let camelLocked = false;
-    let camelTimer = null;
+let camelLocked = false;
+let camelTimer = null;
 
-    function playCamelReaction() {
-      if (camelLocked) return;
+function playCamelReaction() {
+  if (camelLocked) return;
 
-      const reaction =
-        CAMEL_REACTIONS[Math.floor(Math.random() * CAMEL_REACTIONS.length)];
+  camelLocked = true;
 
-      camelLocked = true;
-      camelImg.src = `./camel-${reaction.state}.png`;
+  const reaction =
+    CAMEL_REACTIONS[Math.floor(Math.random() * CAMEL_REACTIONS.length)];
 
-      clearTimeout(camelTimer);
-      camelTimer = setTimeout(() => {
-        camelImg.src = "./camel-normal.png";
-        camelLocked = false;
-      }, reaction.duration);
-    }
+  // Small human-like delay before reaction
+  setTimeout(() => {
+    camelImg.src = `./camel-${reaction.state}.png`;
+
+    // Subtle animation
+    camelImg.style.transform = "translateY(-4px) scale(1.04)";
+
+    clearTimeout(camelTimer);
+    camelTimer = setTimeout(() => {
+      camelImg.src = "./camel-normal.png";
+      camelImg.style.transform = "translateY(0) scale(1)";
+      camelLocked = false;
+    }, reaction.duration);
+  }, 120);
+}
 
     /* ------------------ UI UPDATE ------------------ */
     function updateUI() {
