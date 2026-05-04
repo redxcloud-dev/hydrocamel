@@ -2,157 +2,228 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>HydroCamel</title>
 
-  <!-- PWA -->
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#f7f9fb">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="HydroCamel">
-  <link rel="apple-touch-icon" href="icon-512.png">
-
   <style>
+    * {
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
     body {
       margin: 0;
-      padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: #f7f9fb;
-      color: #1f2937;
+      background: #f5fbff;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 420px;
+      padding: 16px;
       text-align: center;
     }
 
-    h1 {
-      margin-top: 32px;
-      font-size: 36px;
+    /* Camel */
+    .camel {
+      width: 180px;
+      margin: 20px auto 10px;
+      transition: transform 0.2s ease;
     }
 
-    .subtitle {
-      color: #6b7280;
-      margin-bottom: 24px;
+    /* Stats */
+    .stats {
+      margin-top: 8px;
+      font-size: 18px;
+      font-weight: 600;
     }
 
-    .amount {
-      font-size: 48px;
-      font-weight: 700;
-    }
-
-    .target {
-      color: #6b7280;
-      margin-bottom: 16px;
-    }
-
-    #camelImage {
-      width: 220px;
-      margin: 16px auto;
-      display: block;
-    }
-
-    .hint {
-      color: #6b7280;
-      margin-bottom: 12px;
-    }
-
-    .glass {
-      width: 120px;
-      height: 180px;
-      border: 4px solid #38bdf8;
-      border-radius: 16px;
-      margin: 0 auto 20px;
+    /* Glass */
+    .glass-container {
+      margin: 24px auto;
+      width: 140px;
+      height: 220px;
+      border: 4px solid #4aa3ff;
+      border-radius: 0 0 20px 20px;
       position: relative;
       overflow: hidden;
-      background: #fff;
+      cursor: pointer;
+      background: #ffffff;
     }
 
     .water {
       position: absolute;
       bottom: 0;
       width: 100%;
-      height: 0%;
-      background: #38bdf8;
+      height: 30%;
+      background: linear-gradient(#6ecbff, #2b8cff);
       transition: height 0.4s ease;
     }
 
-    .add-btn {
-      width: 90%;
-      max-width: 320px;
-      margin: 0 auto;
-      padding: 16px;
-      font-size: 18px;
-      background: #38bdf8;
-      color: white;
-      border: none;
-      border-radius: 16px;
+    .plus {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 42px;
+      font-weight: bold;
+      color: #2b8cff;
+      pointer-events: none;
     }
 
-    .footer {
-      margin: 24px 0;
-      font-size: 14px;
-      color: #6b7280;
+    /* Intake sheet */
+    .sheet {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: -100%;
+      background: #fff;
+      border-radius: 20px 20px 0 0;
+      padding: 20px;
+      box-shadow: 0 -6px 20px rgba(0,0,0,0.15);
+      transition: bottom 0.3s ease;
+    }
+
+    .sheet.show {
+      bottom: 0;
+    }
+
+    .sheet h3 {
+      margin-top: 0;
+    }
+
+    .options {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .option {
+      flex: 1;
+      padding: 14px;
+      background: #e9f4ff;
+      border-radius: 14px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .option:hover {
+      background: #d8ecff;
     }
   </style>
 </head>
 
 <body>
+  <div class="app">
 
-  <h1>HydroCamel</h1>
-  <div class="subtitle">Smart hydration intelligence</div>
+    <!-- CAMEL -->
+    <img
+      id="camel"
+      class="camel"
+      src="./camel-normal.png"
+      alt="Camel"
+    />
 
-  <div class="amount">
-    <span id="current">0</span> ml
+    <!-- STATS -->
+    <div class="stats">
+      <span id="current">0</span> ml / <span id="goal">2000</span> ml
+    </div>
+
+    <!-- GLASS -->
+    <div class="glass-container" id="glass">
+      <div class="water" id="water"></div>
+      <div class="plus">+</div>
+    </div>
+
   </div>
-  <div class="target">of 2500 ml</div>
 
-  <!-- ✅ CAMEL (FIXED PATH) -->
-  <img
-    id="camelImage"
-    src="./camel-normal.png"
-    alt="HydroCamel"
-  >
-
-  <div class="hint">Start hydrating 💧</div>
-
-  <!-- Glass -->
-  <div class="glass">
-    <div id="water" class="water"></div>
-  </div>
-
-  <button class="add-btn" onclick="addWater(250)">
-    Add 250 ml
-  </button>
-
-  <div class="footer">
-    Calm · Private · Offline-friendly
+  <!-- INTAKE SHEET -->
+  <div class="sheet" id="sheet">
+    <h3>Add Water</h3>
+    <div class="options">
+      <div class="option" data-ml="250">250 ml</div>
+      <div class="option" data-ml="350">350 ml</div>
+      <div class="option" data-ml="500">500 ml</div>
+    </div>
   </div>
 
   <script>
-    const GOAL = 2500;
-    let intake = 0;
+    /* ------------------ STATE ------------------ */
+    const dailyGoal = 2000;
+    let currentWater = Number(localStorage.getItem("water") || 0);
 
-    function updateUI() {
-      document.getElementById("current").textContent = intake;
-      const percent = Math.min((intake / GOAL) * 100, 100);
-      document.getElementById("water").style.height = percent + "%";
+    /* ------------------ ELEMENTS ------------------ */
+    const currentEl = document.getElementById("current");
+    const goalEl = document.getElementById("goal");
+    const waterEl = document.getElementById("water");
+    const glass = document.getElementById("glass");
+    const sheet = document.getElementById("sheet");
+    const camelImg = document.getElementById("camel");
 
-      const camel = document.getElementById("camelImage");
-      if (intake === 0) camel.src = "camel-normal.png";
-      else if (intake < 1000) camel.src = "camel-blink.png";
-      else if (intake < 2000) camel.src = "camel-wink.png";
-      else camel.src = "camel-kiss.png";
+    goalEl.textContent = dailyGoal;
+
+    /* ------------------ CAMEL REACTIONS ------------------ */
+    const CAMEL_REACTIONS = [
+      { state: "blink", duration: 600 },
+      { state: "wink", duration: 700 },
+      { state: "kiss", duration: 1000 }
+    ];
+
+    let camelLocked = false;
+    let camelTimer = null;
+
+    function playCamelReaction() {
+      if (camelLocked) return;
+
+      const reaction =
+        CAMEL_REACTIONS[Math.floor(Math.random() * CAMEL_REACTIONS.length)];
+
+      camelLocked = true;
+      camelImg.src = `./camel-${reaction.state}.png`;
+
+      clearTimeout(camelTimer);
+      camelTimer = setTimeout(() => {
+        camelImg.src = "./camel-normal.png";
+        camelLocked = false;
+      }, reaction.duration);
     }
 
-    function addWater(amount) {
-      intake = Math.min(intake + amount, GOAL);
-      updateUI();
+    /* ------------------ UI UPDATE ------------------ */
+    function updateUI() {
+      currentEl.textContent = currentWater;
+      const percent = Math.min(currentWater / dailyGoal, 1);
+      waterEl.style.height = `${percent * 100}%`;
     }
 
     updateUI();
 
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("sw.js");
-    }
-  </script>
+    /* ------------------ GLASS ------------------ */
+    glass.addEventListener("click", () => {
+      sheet.classList.add("show");
+    });
 
+    document.querySelectorAll(".option").forEach(opt => {
+      opt.addEventListener("click", () => {
+        const ml = Number(opt.dataset.ml);
+        currentWater += ml;
+        localStorage.setItem("water", currentWater);
+
+        updateUI();
+        playCamelReaction();
+
+        sheet.classList.remove("show");
+      });
+    });
+
+    /* ------------------ CLOSE SHEET ON OUTSIDE TAP ------------------ */
+    document.addEventListener("click", e => {
+      if (!sheet.contains(e.target) && !glass.contains(e.target)) {
+        sheet.classList.remove("show");
+      }
+    });
+  </script>
 </body>
 </html>
