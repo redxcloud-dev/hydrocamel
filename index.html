@@ -1,260 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>HydroCamel</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>HydroCamel</title>
 
-<style>
-:root {
-  --blue: #2fa8e1;
-  --bg: #f7f9fb;
-  --text: #1f2933;
-}
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#f7f9fb">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="HydroCamel">
+  <link rel="apple-touch-icon" href="icon-512.png">
 
-* {
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-}
+  <style>
+    body {
+      margin: 0;
+      padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f7f9fb;
+      color: #1f2937;
+      text-align: center;
+    }
 
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  text-align: center;
-}
+    h1 {
+      margin-top: 32px;
+      font-size: 36px;
+    }
 
-.container {
-  padding: 40px 20px 30px;
-}
+    .subtitle {
+      color: #6b7280;
+      margin-bottom: 24px;
+    }
 
-h1 {
-  margin: 0;
-  font-size: 34px;
-  font-weight: 700;
-}
+    .amount {
+      font-size: 48px;
+      font-weight: 700;
+    }
 
-.subtitle {
-  margin-top: 4px;
-  color: #6b7280;
-}
+    .target {
+      color: #6b7280;
+      margin-bottom: 16px;
+    }
 
-.amount {
-  margin-top: 30px;
-  font-size: 48px;
-  font-weight: 800;
-}
+    #camelImage {
+      width: 220px;
+      margin: 16px auto;
+      display: block;
+    }
 
-.goal {
-  color: #6b7280;
-}
+    .hint {
+      color: #6b7280;
+      margin-bottom: 12px;
+    }
 
-.camel {
-  width: 260px;
-  margin: 30px auto 10px;
-}
+    .glass {
+      width: 120px;
+      height: 180px;
+      border: 4px solid #38bdf8;
+      border-radius: 16px;
+      margin: 0 auto 20px;
+      position: relative;
+      overflow: hidden;
+      background: #fff;
+    }
 
-.hint {
-  color: #6b7280;
-  margin-bottom: 20px;
-}
+    .water {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 0%;
+      background: #38bdf8;
+      transition: height 0.4s ease;
+    }
 
-/* Main Glass */
-.main-glass {
-  width: 120px;
-  height: 180px;
-  border: 4px solid var(--blue);
-  border-radius: 16px;
-  margin: 0 auto 24px;
-  position: relative;
-  overflow: hidden;
-  cursor: pointer;
-}
+    .add-btn {
+      width: 90%;
+      max-width: 320px;
+      margin: 0 auto;
+      padding: 16px;
+      font-size: 18px;
+      background: #38bdf8;
+      color: white;
+      border: none;
+      border-radius: 16px;
+    }
 
-.main-fill {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  background: var(--blue);
-  height: 0%;
-  transition: height 0.4s ease;
-}
-
-.footer {
-  color: #6b7280;
-  font-size: 14px;
-}
-
-/* Modal */
-.modal {
-  position: fixed;
-  inset: 0;
-  background: var(--bg);
-  display: none;
-  flex-direction: column;
-  padding: 30px 20px;
-}
-
-.modal.active {
-  display: flex;
-}
-
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.modal-title {
-  font-size: 28px;
-  font-weight: 700;
-}
-
-.close {
-  font-size: 28px;
-  cursor: pointer;
-}
-
-.glass-row {
-  display: flex;
-  justify-content: space-between;
-  margin: 50px 0;
-}
-
-.select-glass {
-  width: 90px;
-  height: 140px;
-  border: 3px solid var(--blue);
-  border-radius: 14px;
-  position: relative;
-  overflow: hidden;
-  cursor: pointer;
-}
-
-.select-glass.active {
-  outline: 4px solid rgba(47,168,225,0.25);
-}
-
-.select-fill {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  background: var(--blue);
-}
-
-.select-label {
-  position: absolute;
-  top: 10px;
-  width: 100%;
-  font-weight: 700;
-}
-
-.add-btn {
-  margin-top: auto;
-  padding: 18px;
-  background: var(--blue);
-  color: white;
-  font-size: 18px;
-  border-radius: 14px;
-  cursor: pointer;
-}
-</style>
+    .footer {
+      margin: 24px 0;
+      font-size: 14px;
+      color: #6b7280;
+    }
+  </style>
 </head>
 
 <body>
 
-<div class="container">
   <h1>HydroCamel</h1>
   <div class="subtitle">Smart hydration intelligence</div>
 
-  <div class="amount" id="current">0 ml</div>
-  <div class="goal">of 2500 ml</div>
+  <div class="amount">
+    <span id="current">0</span> ml
+  </div>
+  <div class="target">of 2500 ml</div>
 
+  <!-- ✅ CAMEL (FIXED PATH) -->
   <img
-  id="camelImage"
-  src="./camel-normal.png"
-  alt="HydroCamel"
-/>
+    id="camelImage"
+    src="./camel-normal.png"
+    alt="HydroCamel"
+  >
 
   <div class="hint">Start hydrating 💧</div>
 
-  <div class="main-glass" id="openModal">
-    <div class="main-fill" id="mainFill"></div>
+  <!-- Glass -->
+  <div class="glass">
+    <div id="water" class="water"></div>
   </div>
 
-  <div class="footer">Calm · Private · Offline-friendly</div>
-</div>
+  <button class="add-btn" onclick="addWater(250)">
+    Add 250 ml
+  </button>
 
-<!-- MODAL -->
-<div class="modal" id="modal">
-  <div class="modal-header">
-    <div class="modal-title">Add water</div>
-    <div class="close" id="closeModal">×</div>
+  <div class="footer">
+    Calm · Private · Offline-friendly
   </div>
 
-  <div class="glass-row">
-    <div class="select-glass" data-ml="250">
-      <div class="select-fill" style="height:50%"></div>
-      <div class="select-label">250 ml</div>
-    </div>
-    <div class="select-glass" data-ml="350">
-      <div class="select-fill" style="height:70%"></div>
-      <div class="select-label">350 ml</div>
-    </div>
-    <div class="select-glass" data-ml="500">
-      <div class="select-fill" style="height:100%"></div>
-      <div class="select-label">500 ml</div>
-    </div>
-  </div>
+  <script>
+    const GOAL = 2500;
+    let intake = 0;
 
-  <div class="add-btn" id="addWater">Add water</div>
-</div>
+    function updateUI() {
+      document.getElementById("current").textContent = intake;
+      const percent = Math.min((intake / GOAL) * 100, 100);
+      document.getElementById("water").style.height = percent + "%";
 
-<script>
-const GOAL = 2500;
-let intake = Number(localStorage.getItem("intake")) || 0;
-let selected = 250;
+      const camel = document.getElementById("camelImage");
+      if (intake === 0) camel.src = "camel-normal.png";
+      else if (intake < 1000) camel.src = "camel-blink.png";
+      else if (intake < 2000) camel.src = "camel-wink.png";
+      else camel.src = "camel-kiss.png";
+    }
 
-const currentEl = document.getElementById("current");
-const fillEl = document.getElementById("mainFill");
+    function addWater(amount) {
+      intake = Math.min(intake + amount, GOAL);
+      updateUI();
+    }
 
-function updateUI() {
-  currentEl.textContent = intake + " ml";
-  fillEl.style.height = Math.min((intake / GOAL) * 100, 100) + "%";
-}
+    updateUI();
 
-updateUI();
-
-/* Modal logic */
-const modal = document.getElementById("modal");
-
-document.getElementById("openModal").onclick = () => {
-  modal.classList.add("active");
-};
-
-document.getElementById("closeModal").onclick = () => {
-  modal.classList.remove("active");
-};
-
-document.querySelectorAll(".select-glass").forEach(g => {
-  g.onclick = () => {
-    document.querySelectorAll(".select-glass").forEach(x => x.classList.remove("active"));
-    g.classList.add("active");
-    selected = Number(g.dataset.ml);
-  };
-});
-
-/* Default selection */
-document.querySelector(".select-glass[data-ml='250']").classList.add("active");
-
-document.getElementById("addWater").onclick = () => {
-  intake = Math.min(intake + selected, GOAL);
-  localStorage.setItem("intake", intake);
-  updateUI();
-  modal.classList.remove("active");
-};
-</script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("sw.js");
+    }
+  </script>
 
 </body>
 </html>
