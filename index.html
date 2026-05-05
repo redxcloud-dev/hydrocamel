@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="icon-512.png">
 
 <style>
-:root {
+:root{
   --bg:#f7f9fb;
   --text:#1f2937;
   --muted:#6b7280;
@@ -29,80 +29,108 @@ body{
 }
 
 .app{
-  max-width:420px;
   width:100%;
-  padding:24px;
+  max-width:420px;
+  padding:32px 24px 40px;
   text-align:center;
-  position:relative;
 }
 
-h1{margin:0;font-size:28px}
-.subtitle{color:var(--muted);font-size:14px}
+h1{margin:0;font-size:28px;font-weight:700}
+.subtitle{margin-top:4px;color:var(--muted);font-size:14px}
 
-.amount{font-size:42px;font-weight:800;margin-top:24px}
-.goal{color:var(--muted)}
+.amount{margin-top:28px;font-size:42px;font-weight:800}
+.goal{margin-top:6px;color:var(--muted);font-size:15px}
 
-.camel-wrap{margin:24px 0}
+.camel-wrap{margin:30px 0 16px}
 .camel{width:260px}
 
 .message{font-size:14px;color:var(--muted)}
 
-.add-water{
-  margin-top:28px;
-  display:flex;
-  justify-content:center;
-}
-
-.water-btn{
-  width:70px;
-  height:100px;
-  border-radius:18px;
-  background:linear-gradient(#dff3ff,#b6e6ff);
-  border:2px solid var(--accent);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  font-size:34px;
-  font-weight:700;
-  color:var(--accent);
+.add-water-btn{
+  margin-top:26px;
+  padding:14px;
+  background:var(--accent);
+  color:#fff;
+  border-radius:14px;
+  font-weight:600;
   cursor:pointer;
 }
 
-/* ===== Intake Screen ===== */
-.overlay{
+/* ===== MODAL ===== */
+.modal{
   position:fixed;
   inset:0;
-  background:#fff;
-  z-index:10;
+  background:var(--bg);
   display:none;
-  flex-direction:column;
+  z-index:10;
 }
 
-.header{
-  padding:16px;
-  text-align:left;
-  font-size:18px;
-  font-weight:600;
+.modal.active{display:flex;justify-content:center;align-items:center}
+
+.modal-inner{
+  width:100%;
+  max-width:420px;
+  text-align:center;
 }
 
-.back{cursor:pointer}
-
-.glasses{
-  flex:1;
+/* ===== GLASSES ===== */
+.stage{
+  height:420px;
   display:flex;
-  justify-content:space-around;
+  justify-content:center;
   align-items:flex-end;
-  padding:40px 20px;
+  gap:50px;
+}
+
+.glass-wrap{
+  transition:transform .35s ease,opacity .35s ease;
+  cursor:pointer;
+}
+
+.glass-wrap.side{
+  transform:scale(.68) translateY(60px);
+  opacity:.55;
 }
 
 .glass{
-  width:120px;
-  height:260px;
-  border-radius:20px;
-  border:3px solid var(--accent);
   position:relative;
+  width:140px;
+  height:300px;
+  border-radius:32px 32px 26px 26px;
+  background:linear-gradient(90deg,
+    rgba(255,255,255,.35),
+    rgba(255,255,255,.05) 40%,
+    rgba(255,255,255,.25)
+  );
+  border:3px solid rgba(43,176,237,.6);
   overflow:hidden;
-  touch-action:none;
+}
+
+/* rim */
+.glass::before{
+  content:"";
+  position:absolute;
+  top:-8px;
+  left:14px;
+  right:14px;
+  height:16px;
+  border-radius:50%;
+  background:#fff;
+  border:2px solid rgba(43,176,237,.55);
+  z-index:3;
+}
+
+/* highlight */
+.glass::after{
+  content:"";
+  position:absolute;
+  top:14px;
+  left:12px;
+  width:14px;
+  height:80%;
+  background:rgba(255,255,255,.25);
+  border-radius:10px;
+  z-index:2;
 }
 
 .fill{
@@ -110,25 +138,34 @@ h1{margin:0;font-size:28px}
   bottom:0;
   width:100%;
   height:0%;
-  background:linear-gradient(#2bb0ed,#6dd5ff);
-  transition:height .1s;
+  background:linear-gradient(to top,#2bb0ed,#9be3ff);
+  transition:height .15s cubic-bezier(.22,1,.36,1);
 }
 
-.label{
+.fill::after{
+  content:"";
   position:absolute;
-  top:-32px;
-  width:100%;
+  top:-8px;
+  left:-10%;
+  width:120%;
+  height:16px;
+  background:rgba(255,255,255,.4);
+  border-radius:50%;
+}
+
+.ml{
+  margin-top:16px;
   font-weight:600;
 }
 
-.add-btn{
-  margin:24px;
+.confirm{
+  margin-top:28px;
   padding:14px;
-  border-radius:12px;
   background:var(--accent);
   color:#fff;
-  font-size:16px;
-  border:none;
+  border-radius:14px;
+  font-weight:600;
+  cursor:pointer;
 }
 </style>
 </head>
@@ -146,94 +183,100 @@ h1{margin:0;font-size:28px}
     <img id="camel" class="camel" src="camel-normal.png">
   </div>
 
-  <div class="message" id="message">Stay hydrated 💧</div>
+  <div class="message" id="message">Start hydrating 💧</div>
 
-  <div class="add-water">
-    <div class="water-btn" onclick="openIntake()">+</div>
-  </div>
+  <div class="add-water-btn" onclick="openModal()">+ Water</div>
 </div>
 
-<!-- Intake Overlay -->
-<div class="overlay" id="overlay">
-  <div class="header"><span class="back" onclick="closeIntake()">← Back</span></div>
+<!-- ===== MODAL ===== -->
+<div class="modal" id="modal">
+  <div class="modal-inner">
 
-  <div class="glasses">
-    <div class="glass" data-max="500">
-      <div class="label"><span id="ml1">0</span> ml</div>
-      <div class="fill" id="fill1"></div>
+    <div class="stage">
+      <div class="glass-wrap active" data-max="500">
+        <div class="glass"><div class="fill"></div></div>
+        <div class="ml">0 ml selected</div>
+      </div>
+
+      <div class="glass-wrap side" data-max="1000">
+        <div class="glass"><div class="fill"></div></div>
+        <div class="ml">0 ml selected</div>
+      </div>
     </div>
 
-    <div class="glass" data-max="1000">
-      <div class="label"><span id="ml2">0</span> ml</div>
-      <div class="fill" id="fill2"></div>
-    </div>
+    <div class="confirm" onclick="confirmWater()">+ Water</div>
   </div>
-
-  <button class="add-btn" onclick="commitWater()">+ Add water</button>
 </div>
 
 <script>
 const GOAL=2500;
-let total=+localStorage.getItem("total")||0;
-let selected=0;
-
+let total=Number(localStorage.getItem("hydrocamel-total"))||0;
+const totalEl=document.getElementById("total");
 const camel=document.getElementById("camel");
 const message=document.getElementById("message");
-const totalEl=document.getElementById("total");
 
 totalEl.textContent=total+" ml";
 
-function openIntake(){
-  selected=0;
-  document.getElementById("overlay").style.display="flex";
-  resetGlasses();
+function openModal(){
+  document.getElementById("modal").classList.add("active");
 }
 
-function closeIntake(){
-  document.getElementById("overlay").style.display="none";
+function closeModal(){
+  document.getElementById("modal").classList.remove("active");
 }
 
-function resetGlasses(){
-  ["fill1","fill2"].forEach(id=>document.getElementById(id).style.height="0%");
-  ml1.textContent=0; ml2.textContent=0;
-}
+let active=document.querySelector(".active");
+let selectedML=0;
 
-document.querySelectorAll(".glass").forEach((glass,i)=>{
-  let fill=glass.querySelector(".fill");
-  let label=glass.querySelector("span");
+document.querySelectorAll(".glass-wrap").forEach(g=>{
+  g.addEventListener("click",()=>{
+    if(g===active) return;
+    active.classList.add("side");
+    active.classList.remove("active");
+    g.classList.remove("side");
+    g.classList.add("active");
+    active=g;
+    selectedML=0;
+    g.querySelector(".fill").style.height="0%";
+    g.querySelector(".ml").textContent="0 ml selected";
+  });
 
-  glass.addEventListener("pointermove",e=>{
-    if(!e.buttons) return;
-    const rect=glass.getBoundingClientRect();
-    let pct=(rect.bottom-e.clientY)/rect.height;
+  g.addEventListener("pointermove",e=>{
+    if(!g.classList.contains("active")||e.buttons!==1) return;
+    const glass=g.querySelector(".glass");
+    const fill=g.querySelector(".fill");
+    const label=g.querySelector(".ml");
+    const r=glass.getBoundingClientRect();
+    let pct=(r.bottom-e.clientY)/r.height;
     pct=Math.max(0,Math.min(1,pct));
     fill.style.height=pct*100+"%";
-    let ml=Math.round(pct*glass.dataset.max/10)*10;
-    label.textContent=ml;
-    selected=i===0?ml:0;
-    if(i===1) selected=ml;
+    const max=g.dataset.max;
+    selectedML=Math.round((pct*max)/10)*10;
+    label.textContent=selectedML+" ml selected";
   });
 });
 
-function commitWater(){
-  if(!selected) return;
-  total=Math.min(GOAL,total+selected);
-  totalEl.textContent=total+" ml";
-  localStorage.setItem("total",total);
-  react();
-  closeIntake();
+function react(src,d=800){
+  camel.src=src;
+  setTimeout(()=>camel.src="camel-normal.png",d);
 }
 
-function react(){
-  const reactions=[
-    ["camel-blink.png","Nice sip 💧"],
-    ["camel-kiss.png","Camel loves you ❤️"],
-    ["camel-wink.png","Keep going 😉"]
-  ];
-  const r=reactions[Math.floor(Math.random()*reactions.length)];
-  camel.src=r[0];
-  message.textContent=r[1];
-  setTimeout(()=>camel.src="camel-normal.png",700);
+function confirmWater(){
+  if(!selectedML) return;
+  total=Math.min(GOAL,total+selectedML);
+  totalEl.textContent=total+" ml";
+  localStorage.setItem("hydrocamel-total",total);
+
+  const reactions=["camel-blink.png","camel-happy.png","camel-kiss.png"];
+  react(reactions[Math.floor(Math.random()*reactions.length)]);
+  message.textContent="Nice hydration 💧";
+
+  if(total>=GOAL){
+    react("camel-wink.png",1200);
+    message.textContent="Goal achieved 🎉";
+  }
+
+  closeModal();
 }
 </script>
 
